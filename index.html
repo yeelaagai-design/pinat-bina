@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מאגר פינת בינה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Heebo:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#22296e; --navy-2:#2f3a8f; --teal:#0b8a9c; --teal-soft:#e3f3f5;
+  --gold:#e9a93a; --gold-soft:#fdf3e1; --orange:#de7a2c; --ink:#1c2140; --muted:#5d6380;
+  --line:#e6e3dc; --bg:#faf8f4; --card:#ffffff; --ar:#7a4bb0; --ar-soft:#f1eafa;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Heebo,'Noto Sans Arabic',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit}
+
+/* top bar */
+.topbar{background:#fff;border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topbar img{height:56px;width:auto;display:block}
+.topbar .tik{height:62px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 55%,#1d6f8e 100%);color:#fff}
+.hero::before{content:"";position:absolute;inset:auto -10% -55% -10%;height:120%;
+  background:radial-gradient(60% 55% at 70% 100%,rgba(233,169,58,.55),transparent 70%);pointer-events:none}
+.hero svg.dunes{position:absolute;bottom:-2px;left:0;width:100%;height:90px;display:block}
+.hero-in{position:relative;max-width:1180px;margin:0 auto;padding:56px 24px 110px;text-align:center}
+.eyebrow{display:inline-block;font-weight:600;font-size:14px;letter-spacing:.02em;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.25);padding:5px 14px;border-radius:999px;margin-bottom:18px}
+h1{font-family:Rubik,sans-serif;font-weight:800;font-size:clamp(36px,6vw,64px);margin:0;line-height:1.05}
+h1 span{color:var(--gold)}
+.sub{font-size:clamp(17px,2.2vw,21px);opacity:.92;margin:14px auto 0;max-width:640px}
+
+/* search */
+.search-wrap{max-width:760px;margin:34px auto 0}
+.search{display:flex;align-items:center;background:#fff;border-radius:999px;padding:8px 8px 8px 8px;
+  box-shadow:0 18px 40px -12px rgba(10,15,50,.45)}
+.search svg{flex:none;margin:0 14px 0 6px;color:var(--teal)}
+.search input{flex:1;border:0;outline:0;font:500 19px Heebo,sans-serif;color:var(--ink);background:transparent;min-width:0;padding:10px 0}
+#q::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+.search input::placeholder{color:#9aa0b8}
+.search .go{border:0;background:var(--orange);color:#fff;font-weight:700;font-size:17px;padding:13px 26px;border-radius:999px}
+.search .go:hover{background:#c96a20}
+.search .clear{border:0;background:transparent;color:#9aa0b8;font-size:22px;padding:0 10px;display:none}
+.search.has .clear{display:block}
+
+.intents{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.intent{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;font-weight:600;font-size:15.5px;
+  padding:9px 18px;border-radius:999px;transition:.15s}
+.intent:hover{background:rgba(255,255,255,.18)}
+.intent[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff}
+.chips{display:none;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px auto 0;max-width:860px}
+.chips.on{display:flex}
+.chip{border:0;background:rgba(255,255,255,.95);color:var(--navy);font-weight:600;font-size:14.5px;padding:7px 14px;border-radius:999px}
+.chip:hover{background:var(--gold);color:var(--navy)}
+
+/* results */
+main{max-width:1180px;margin:-46px auto 0;padding:0 24px 64px;position:relative}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:22px;box-shadow:0 6px 20px -14px rgba(20,25,60,.4)}
+.count{font-weight:600}
+.count b{color:var(--teal)}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.f{border:1px solid var(--line);background:#fff;color:var(--muted);font-weight:600;font-size:14px;padding:6px 13px;border-radius:999px}
+.f[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 16px;display:flex;flex-direction:column;
+  text-align:right;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;right:0;left:0;height:5px;background:var(--accent,var(--teal))}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(20,25,60,.45);border-color:#d6d2c8}
+.subt{font-size:14px;color:var(--muted);margin:-4px 0 10px;font-weight:500}
+.card h3{font-family:Rubik,sans-serif;font-weight:700;font-size:18.5px;line-height:1.3;margin:6px 0 10px}
+.who{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:500;font-size:15px}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;background:var(--accent,var(--teal));flex:none}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 14px}
+.tag{font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--teal-soft);color:#0a6c7a}
+.tag.make{background:var(--gold-soft);color:#9a6512}
+.tag.topic{background:#eef0f7;color:var(--navy-2)}
+.tag.ar{background:var(--ar-soft);color:var(--ar)}
+.foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;border-top:1px dashed var(--line);padding-top:12px;font-size:13.5px;color:var(--muted)}
+.assets{display:flex;gap:12px}
+.assets span{display:flex;align-items:center;gap:4px;opacity:.55}
+.open{border:0;background:transparent;color:var(--teal);font-weight:700;font-size:14px;padding:0}
+.card mark{background:#fff0c9;color:inherit;border-radius:3px;padding:0 1px}
+
+.empty{display:none;text-align:center;background:#fff;border:1px dashed #d6d2c8;border-radius:var(--radius);padding:40px 20px}
+.empty.on{display:block}
+.empty h3{font-family:Rubik,sans-serif;margin:0 0 6px}
+.empty p{color:var(--muted);margin:0 0 16px}
+.btn{border:0;background:var(--navy);color:#fff;font-weight:700;padding:11px 22px;border-radius:999px;font-size:15px}
+.btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+
+
+footer{border-top:1px solid var(--line);background:#fff;color:var(--muted);font-size:14px}
+footer div{max-width:1180px;margin:0 auto;padding:18px 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* workshop panel */
+.scrim{position:fixed;inset:0;background:rgba(15,18,45,.55);display:none;z-index:20}
+.scrim.on{display:block}
+.panel{position:fixed;top:0;bottom:0;left:0;width:min(640px,100%);background:var(--bg);z-index:21;transform:translateX(-105%);
+  transition:transform .25s ease;overflow-y:auto;box-shadow:20px 0 50px -20px rgba(0,0,0,.4)}
+.panel.on{transform:none}
+.p-head{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative}
+.p-head::after{content:"";position:absolute;bottom:0;right:0;left:0;height:5px;background:var(--accent,var(--teal))}
+.p-close{position:absolute;top:14px;left:14px;border:0;background:rgba(255,255,255,.15);color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px}
+.p-head h2{font-family:Rubik,sans-serif;font-size:24px;line-height:1.25;margin:18px 0 10px}
+.p-head .who{color:rgba(255,255,255,.85)}
+.p-body{padding:22px 24px 40px}
+.sec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+.sec h4{font-family:Rubik,sans-serif;font-size:17px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.ph{border-radius:12px;background:repeating-linear-gradient(135deg,#f1efe9 0 12px,#ebe8e0 12px 24px);color:var(--muted);
+  display:grid;place-items:center;text-align:center;font-weight:600;font-size:14.5px;padding:16px}
+.ph.video{aspect-ratio:16/9}
+.ph.slides{height:120px}
+.faq-cat{margin-bottom:14px}
+.faq-cat b{display:inline-block;font-size:13px;font-weight:700;color:#0a6c7a;background:var(--teal-soft);padding:3px 10px;border-radius:999px;margin-bottom:8px}
+.sk{height:44px;border-radius:10px;background:#f3f1ec;margin-bottom:8px;display:flex;align-items:center;padding:0 14px;color:#a7a39a;font-size:14px}
+.note{font-size:13.5px;color:var(--muted);margin:4px 0 0}
+.assets span.on{opacity:1;color:var(--teal);font-weight:600}
+.ready{position:absolute;top:14px;left:14px;font-size:12px;font-weight:700;background:#e6f6ef;color:#167a55;padding:3px 10px;border-radius:999px}
+.summary{font-size:15.5px;margin:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.act{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;font-size:15px;padding:11px 18px;border-radius:12px;background:var(--navy);color:#fff}
+.act.alt{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+.act:hover{filter:brightness(1.1)}
+details.qa{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff}
+details.qa summary{list-style:none;cursor:pointer;padding:12px 14px;font-weight:600;display:flex;justify-content:space-between;gap:10px}
+details.qa summary::-webkit-details-marker{display:none}
+details.qa summary::after{content:"+";color:var(--teal);font-weight:700;font-size:18px;line-height:1}
+details.qa[open] summary::after{content:"−"}
+details.qa[open]{border-color:#bfe2e7}
+details.qa .ans{padding:0 14px 14px;color:#3a3f5c;font-size:15px}
+.lang-ar{font-family:'Noto Sans Arabic',Heebo,sans-serif}
+.pending{background:#fff7e6;border:1px solid #f0dfbd;border-radius:12px;padding:12px 14px;font-size:14.5px;color:#7a5a12;margin-top:12px}
+.gal{position:relative;border-radius:12px;overflow:hidden;background:#f1efe9;margin-top:14px}
+.gal img{display:block;width:100%;height:auto}
+.gal .nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.gal-btn{border:1px solid var(--line);background:#fff;color:var(--navy);font-weight:700;width:38px;height:38px;border-radius:50%;font-size:18px}
+.gal-count{font-size:14px;color:var(--muted);font-weight:600}
+.faq-filter{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:15px Heebo,sans-serif;margin-bottom:14px}
+/* views */
+.views{display:flex;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px;margin:0 auto 18px;width:max-content;max-width:100%;overflow-x:auto;box-shadow:0 6px 20px -14px rgba(20,25,60,.4)}
+.vt{border:0;background:transparent;color:var(--muted);font-weight:700;font-size:15.5px;padding:9px 20px;border-radius:999px;white-space:nowrap}
+.vt[aria-selected="true"]{background:var(--navy);color:#fff}
+.view{display:none}.view.on{display:block}
+.asof{font-size:14px;opacity:.75;margin:12px auto 0;max-width:640px}
+.intro{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:20px;color:var(--muted);font-size:15px}
+.intro b{color:var(--ink)}
+/* paths */
+.paths{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:18px}
+.path{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+.path::before{content:"";position:absolute;top:0;right:0;left:0;height:5px;background:var(--pc,var(--teal))}
+.path h3{font-family:Rubik,sans-serif;font-size:20px;margin:6px 0 4px}
+.path .for{font-size:14px;color:var(--muted);margin:0 0 14px}
+.steps{list-style:none;margin:0;padding:0;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:0 44px 14px 0}
+.steps li::before{content:counter(st);position:absolute;right:0;top:2px;width:30px;height:30px;border-radius:50%;background:var(--pc,var(--teal));color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}
+.steps li:not(:last-child)::after{content:"";position:absolute;right:14px;top:34px;bottom:2px;width:2px;background:var(--line)}
+.steps button{border:0;background:none;padding:0;text-align:right;font:700 16px Heebo,sans-serif;color:var(--navy);text-decoration:underline;text-decoration-color:#c9cbe0;text-underline-offset:3px}
+.steps button:hover{color:var(--teal)}
+.steps .by{font-size:13.5px;color:var(--muted);margin-top:1px}
+.steps .why{font-size:14.5px;margin-top:3px;color:#3a3f5c}
+.steps .flag{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;margin-inline-start:6px;vertical-align:middle}
+.flag.ar{background:var(--ar-soft);color:var(--ar)}
+.flag.norec{background:#f3f1ec;color:var(--muted)}
+/* prompts */
+.pbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:18px}
+.pbar input{flex:1 1 240px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:15px Heebo,sans-serif}
+.pcats{display:flex;gap:6px;flex-wrap:wrap}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:16px}
+.pr{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column}
+.pr h3{font-family:Rubik,sans-serif;font-size:16.5px;margin:0 0 6px}
+.pr .meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.pr pre{white-space:pre-wrap;font:15px/1.65 Heebo,'Noto Sans Arabic',sans-serif;background:#f7f5f0;border:1px solid #eeebe3;border-radius:12px;padding:12px 14px;margin:0 0 12px;color:var(--ink)}
+.pr pre[lang="ar"]{font-family:'Noto Sans Arabic',Heebo,sans-serif}
+.pr .tip{font-size:13.5px;color:var(--muted);margin:-4px 0 12px}
+.pr .row{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.copy{border:0;background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 16px;border-radius:999px}
+.copy.ok{background:#167a55}
+.src{border:0;background:none;color:var(--teal);font-weight:700;font-size:14px;padding:0;text-align:right}
+.lock{overflow:hidden}
+.card:has(.ready) h3{padding-left:104px}
+@media (max-width:640px){.card:has(.ready) h3{padding-left:0;margin-top:26px}.ready{top:16px;right:20px;left:auto}}
+.sketch-badge{position:fixed;bottom:16px;right:16px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;z-index:5;opacity:.85}
+
+@media (max-width:640px){
+  .topbar img{height:40px}.topbar .tik{height:44px}
+  .search input{font-size:16px}.search .go{padding:11px 16px;font-size:15px}
+  .hero-in{padding:40px 18px 96px}
+  main{padding:0 14px 48px}
+}
+
+@media (max-width:640px){
+  .views{width:100%;padding:5px;gap:4px}
+  .vt{flex:1;padding:9px 6px;font-size:14px}
+  .p-head h2{font-size:21px;padding-left:44px}
+  .sketch-badge{display:none}
+  .path,.pr{padding:16px}
+  .steps li{padding-right:40px}
+  .pcats{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .pcats .f{flex:none}
+  .pr .row{flex-direction:column;align-items:stretch}
+  .copy{padding:11px 16px}
+  .bar{flex-direction:column;align-items:flex-start}
+  .actions .act{flex:1;justify-content:center}
+  .gal .nav{justify-content:center}
+  .intro{font-size:14.5px}
+}
+@media (max-width:380px){ .vt{font-size:13px} .search .go{padding:10px 12px} }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <img src="logo-district.png" alt="משרד החינוך, מחוז הדרום">
+    <img class="tik" src="logo-tikshuv.png" alt="תקשוב דרום">
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-in">
+    <div class="eyebrow">שבוע בינה מלאכותית מחוזי</div>
+    <h1>מאגר <span>פינת בינה</span></h1>
+    <p class="sub">מרחב הקלטות הסדנאות של שבוע הבינה המלאכותית המחוזי. הקלטות, מצגות ושאלות נפוצות לכל סדנה, במקום אחד.</p>
+    <p class="asof">התוכן נכון לנובמבר 2026. הכלים מתעדכנים מהר, וייתכן שחלק מהכפתורים והתפריטים ייראו אחרת.</p>
+
+    <form class="search-wrap" id="searchForm" role="search">
+      <div class="search" id="searchBox">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" autocomplete="off" aria-label="חיפוש סדנה" placeholder="אני רוצה ללמוד על הכלי...">
+        <button type="button" class="clear" id="clear" aria-label="ניקוי">×</button>
+        <button type="submit" class="go">חיפוש</button>
+      </div>
+      <div class="intents">
+        <button type="button" class="intent" data-intent="tool" aria-pressed="false">אני רוצה ללמוד על כלי</button>
+        <button type="button" class="intent" data-intent="make" aria-pressed="false">אני רוצה ללמוד ליצור</button>
+        <button type="button" class="intent" data-intent="topic" aria-pressed="false">אני מחפש/ת נושא</button>
+      </div>
+      <div class="chips" id="chips-tool"></div>
+      <div class="chips" id="chips-make"></div>
+      <div class="chips" id="chips-topic"></div>
+    </form>
+  </div>
+  <svg class="dunes" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 60 C 240 20, 480 20, 720 50 S 1200 85, 1440 40 L1440 90 L0 90Z" fill="#e9a93a" opacity=".35"/>
+    <path d="M0 75 C 300 40, 600 55, 860 70 S 1260 70, 1440 60 L1440 90 L0 90Z" fill="#faf8f4"/>
+  </svg>
+</section>
+
+<main>
+  <div class="views" role="tablist">
+    <button class="vt" role="tab" data-v="ws" aria-selected="true">כל הסדנאות</button>
+    <button class="vt" role="tab" data-v="paths" aria-selected="false">מסלולי למידה</button>
+    <button class="vt" role="tab" data-v="prompts" aria-selected="false">בנק פרומפטים</button>
+  </div>
+  <section class="view on" id="view-ws">
+  <div class="bar">
+    <div class="count" id="count"></div>
+    <div class="filters">
+      <button class="f" data-f="all" aria-pressed="true">כל הסדנאות</button>
+      <button class="f" data-f="he" aria-pressed="false">בעברית</button>
+      <button class="f" data-f="ar" aria-pressed="false">בשפה הערבית</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="empty" id="empty">
+    <h3>לא מצאנו סדנה שמתאימה לחיפוש</h3>
+    <p>נסו מילה אחרת, למשל שם של כלי או משהו שרוצים ליצור.</p>
+    <button class="btn ghost" id="reset">הצגת כל הסדנאות</button>
+  </div>
+  </section>
+
+  <section class="view" id="view-paths">
+    <div class="intro"><b>לא יודעים מאיפה להתחיל?</b> כל מסלול מסדר כמה סדנאות לפי סדר צפייה מומלץ. לחיצה על שם הסדנה פותחת את ההקלטה, המצגת והשאלות הנפוצות.</div>
+    <div class="paths" id="paths"></div>
+  </section>
+
+  <section class="view" id="view-prompts">
+    <div class="intro"><b>פרומפטים מוכנים מהסדנאות.</b> מעתיקים, מחליפים את הנושא, הכיתה והחומר בשלכם, ומדביקים בכלי. ואל תשכחו: בלי שמות, ציונים או פרטים מזהים של תלמידים.</div>
+    <div class="pbar">
+      <input id="pq" type="search" placeholder="חיפוש פרומפט, למשל: מבחן, תמונה, דף עבודה" aria-label="חיפוש פרומפט">
+      <div class="pcats" id="pcats"></div>
+    </div>
+    <div class="pgrid" id="pgrid"></div>
+    <div class="empty" id="pempty"><h3>לא נמצא פרומפט מתאים</h3><p>נסו מילה אחרת או בחרו ״הכול״.</p></div>
+  </section>
+
+</main>
+
+<footer><div><span>משרד החינוך · מחוז הדרום · תקשוב דרום</span><span>מאגר פינת בינה · עודכן לאחרונה: נובמבר 2026</span></div></footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" aria-hidden="true"></aside>
+
+<script>
+const CONTENT = {
+ 16: {
+  slides:"https://canva.link/hw6h2w0k18bpdfm",
+  note:"לסדנה זו לא קיימת הקלטה.",
+  summary:"ניקול הציגה איך משחוק ובינה מלאכותית הופכים משימה למשחק: כשמשימה הופכת לאתגר, הפחד מכישלון מתחלף בחיפוש פתרונות. הסדנה עסקה בצורך הפדגוגי, בערך שהבינה המלאכותית מוסיפה (חיסכון בזמן הכנה, יצירתיות והתאמה אישית), בהתנסות במשחק ״הקונדיטוריה המתמטית״, ובתבניות פרומפטים ליצירת משחקים.",
+  faq:[
+   {c:"למה משחוק", q:"למה להפוך משימה למשחק?", a:"כשהופכים משימה למשחק, המוח מפסיק לפחד מטעויות ומתחיל לחפש פתרונות אקטיביים. המצגת נפתחת בהרצאת TEDx של מארק רובר (״אפקט סופר מריו״) על הרעיון הזה. הקושי עד היום היה הזמן: בניית משחקים וחדרי בריחה דרשה שעות עבודה, והבינה המלאכותית מקצרת את זה לדקות."},
+   {c:"למה משחוק", q:"איזה צורך פדגוגי המשחוק עונה עליו?", a:"שלושה צרכים: הגברת מעורבות ומוטיבציה (מעבר מלמידה פסיבית ללמידה פעילה שבה התלמידים ״שחקנים״); מענה לשונות (הזדמנויות הצלחה מגוונות דרך חידות, תפקידים ומשימות אינטראקטיביות); וגיוון דרכי ההוראה וההערכה (תרגול שוטף, סיכום חומר או מבדק כחוויה מאתגרת ונטולת פחד מכישלון)."},
+   {c:"למה משחוק", q:"מה הבינה המלאכותית מוסיפה?", a:"חיסכון משמעותי בזמן הכנה (חדרי בריחה ומשחקי תפקידים בדקות במקום שעות), סיעור מוחות ורעיונות יצירתיים (רעיונות לחידות, צפנים, רמזים ומנגנוני ניקוד), והתאמה אישית (התאמה של כל משחק לרמת הכיתה ולנושא הנלמד)."},
+   {c:"ההתנסות", q:"מה זה משחק ״הקונדיטוריה המתמטית״?", a:"משחק אינטראקטיבי בנושא שברים לכיתה ד׳, שנבנה בסדנה מפרומפט אחד: משחק שמותאם לשלוש רמות קושי, משלב טקסט, תמונה ועלילה מתמטית, ונוצר תוך פחות מ-5 דקות. הפרומפט המלא נמצא בבנק הפרומפטים."},
+   {c:"ההתנסות", q:"מה צריך לכלול בפרומפט ליצירת משחק?", a:"לפי הפרומפט מהסדנה: נושא וכיתה, עיצוב או עלילה (למשל קונדיטוריה), כותרת והוראות לשחקנים, מנגנון ניקוד ומקום שבו הוא מוצג, משוב לתשובה נכונה ולשגויה, מספר שאלות, טבלת סיכום בסוף, ורמות קושי שונות להתאמה דיפרנציאלית."},
+   {c:"טיפים", q:"מה הטיפים ליצירת משחקים בבינה מלאכותית?", a:"חמישה טיפים: תגמולים חזותיים (נקודות ואימוג׳ים על הצלחה); חוקים ברורים (לא לגלות תשובות ולהמתין לתגובת התלמיד); זהות מוגדרת (דמות מפורשת שמנהלת את הסיפור); שיתוף בשיח (חידה קשה מדי? מבקשים לפשט את המילים בזמן אמת); והתחלה בקטן (חידות סגורות, הצלחות קטנות שבונות ביטחון). בונוס: שמרו קובץ של ״פרומפטים מנצחים״, ובפעם הבאה רק משנים את הנושא."},
+   {c:"תבניות", q:"אילו סוגי משחקים אפשר ליצור?", a:"ארבע תבניות מהסדנה: 1) משחק תפקידים וראיון: הכלי מגלם דמות היסטורית, ספרותית או מדען, והתלמידים מראיינים אותה. 2) תרגול במעטפת סיפורית: עושים תחרות או משימה של בעלי מקצוע, למשל קונדיטור מצחיק ששואל 5 שאלות בשברים, שאלה אחת בכל פעם. 3) חדר בריחה טקסטואלי: התלמידים ״נעולים״ וצריכים לפתור חידות, אחת בכל פעם, בלי להתקדם בלי הקוד המדויק. 4) בחר את ההרפתקה שלך: סיפור שבכל שלב מתאר מצב ונותן שתי אפשרויות, והבחירה משפיעה על המשך. מעתיקים תבנית, משנים את הפרטים ומפעילים ב-Gemini."}
+  ]
+ },
+ 1: {
+  slides:"https://canva.link/ic6j123pg40tw1s",
+  pending:true,
+  note:"עקב תקלה, לא קיימת הקלטה לסדנה זו."
+ },
+ 3: {
+  recording:"https://drive.google.com/file/d/1ZOK7HQXDU9FElbh3BHIfy--Zed1gkt0p/view?usp=sharing",
+  slides:"https://docs.google.com/presentation/d/1zo9Ri_w_9IMc6ddGwpoSZdE5JTH-jmJF4xVkmpnvEpY/edit?usp=sharing",
+  lang:"ar",
+  summary:"הסדנה הועברה בשפה הערבית. עאמר הציג תהליך עבודה מלא בתוך סביבת Google הארגונית: יוצרים טיוטה ראשונה של דף עבודה ב-Gemini Canvas בעזרת פרומפט קצר, מייצאים אותה ל-Google Docs, ומשפרים אותה עם Gemini שבתוך המסמך (חלוקת ניקוד, שאלת בונוס, בדיקה והכנה לפרסום). בסוף שומרים בתיקייה מסודרת בדרייב. הודגם דף עבודה במדעים לכיתה ו׳ על מחזור המים, וגם ניסיון ליצור טבלת ציונים. השאלות הנפוצות כתובות בערבית.",
+  summaryAr:"قدّم المعلم عامر جمل ورشة عملية حول مسار عمل كامل داخل بيئة Google المؤسسية: إنشاء مسودة أولية لورقة عمل في Gemini Canvas ببرومبت قصير، تصديرها إلى Google Docs، ثم تطويرها باستخدام Gemini داخل المستند (توزيع العلامات، سؤال بونص، فحص وتجهيز للنشر)، وحفظها في مجلد منظم في Drive. المثال: ورقة عمل علوم للصف السادس عن دورة الماء في الطبيعة.",
+  faq:[
+   {c:"الفكرة", q:"ما الفرق بين العمل في Gemini وبين أدوات أخرى مثل ChatGPT؟", a:"Gemini جزء من منظومة Google كاملة: البريد المؤسسي، Drive، Docs، Meet والمدرسة الافتراضية. لذلك يمكن البدء بمسودة في Gemini ونقلها مباشرة إلى Drive ومواصلة العمل عليها هناك، بدل نسخ النص من أداة إلى أخرى."},
+   {c:"الفكرة", q:"ما هي مراحل العمل في الورشة؟", a:"أربع مراحل: 1) Gemini Canvas: ننشئ مسودة أولية ببرومبت قصير. 2) التصدير: Share & export ثم Export to Docs. 3) Gemini داخل Docs: نطوّر المسودة بأوامر جديدة. 4) المنتج النهائي: مهمة محسّنة محفوظة في Google Drive. Canvas للبداية فقط، والتطوير الحقيقي يتم داخل Docs."},
+   {c:"البرومبت", q:"كيف أكتب برومبت مناسب لورقة عمل؟", a:"نجيب على ستة أسئلة: لمن؟ (مثلًا معلم علوم، صف سادس)، ما المطلوب؟ (ورقة عمل عن دورة الماء)، لماذا؟ (فهم مراحل دورة الماء)، كم مدتها؟ (25 دقيقة، 3 أسئلة متنوعة)، بأي صيغة؟ (مسودة عربية قابلة للتحرير)، ماذا بعد؟ (تصدير ثم تطوير داخل Docs). القاعدة: الصف + الموضوع + الزمن + نشاط أولي، ولا نطلب المنتج النهائي من البداية. إذا كتبنا فقط «اعمل لي ورقة عمل علوم» سيعطينا شيئًا، لكن ليس ما في رأسنا."},
+   {c:"البرومبت", q:"ما هو البرومبت الذي استُخدم في الورشة؟", a:"«تصرّف كمعلم علوم للصف السادس. أنشئ في Gemini Canvas مسودة أولية لورقة عمل بالعربية عن «دورة الماء في الطبيعة» لمدة 25 دقيقة. اكتب عنوانًا وهدفين وتعليمات قصيرة وثلاثة أسئلة: ترتيب المراحل، تفسير ظاهرة، وتطبيق من الحياة. اترك مساحة للإجابات، واستخدم لغة مناسبة للطلاب. اعرضها كنص قابل للتحرير داخل Canvas. لا تضف مفتاح إجابة أو جدول تقييم الآن؛ سنطوّر المسودة لاحقًا باستخدام Gemini داخل Google Docs.»"},
+   {c:"Gemini Canvas", q:"كيف أفتح Canvas في Gemini؟", a:"ندخل إلى Gemini من المدرسة الافتراضية (الأدوات) بالحساب المؤسسي، نفتح محادثة جديدة، نضغط على علامة + ثم «المزيد من الأدوات» ونختار Canvas، ثم نلصق البرومبت. Gemini لا يرد كجواب في المحادثة، بل يعمل على ملف. لفتح الملف بشكل كبير: النقاط الثلاث، «الملفات في هذه المحادثة»، ثم اختيار الملف. يمكن أيضًا أن نطلب منه في المحادثة تعديلات، مثل «أضف سؤالًا آخر»، وهو يعدّل الملف بنفسه."},
+   {c:"Gemini Canvas", q:"كيف أغيّر لغة الحساب إلى العربية؟", a:"من Drive: الضغط على صورة الحساب، ثم «إدارة حساب Google»، ثم «المعلومات الشخصية»، ثم «اللغة»، واختيار العربية (أو العبرية أو الإنجليزية حسب الرغبة) وحفظ. بعدها نرجع إلى Gemini ونجد الواجهة بالعربية."},
+   {c:"التصدير", q:"كيف أنقل المسودة من Canvas إلى Google Docs؟", a:"داخل الملف في Canvas نضغط على «مشاركة» (Share & export) ثم «تصدير إلى مستندات Google». يتحول الملف إلى مستند في Drive مع اسم مناسب، مثل «ورقة عمل: دورة الماء في الطبيعة». بعدها نراجع المستند ونرتبه يدويًا: نحذف ما لا يحتاجه الطلاب (مثل أهداف ورقة العمل)، نختار خطًا مناسبًا للعربية (مثل Arial أو Times New Roman) وحجمًا مثل 14."},
+   {c:"Gemini داخل Docs", q:"كيف أستخدم Gemini داخل Google Docs؟", a:"في المستند تظهر علامة Gemini (Ask Gemini). نكتب له ما نريد، مثلًا: «هذه ورقة العمل عليها 20 علامة، قسّم العلامات ليكون مجموعها 20 واكتب العلامة عند كل سؤال». Gemini يقترح تغييرات (يشطب ويضيف)، ويمكن قبول كل اقتراح وحده أو «قبول الكل». حسب العرض، قد تتطلب هذه الميزة ترخيصًا مؤسسيًا وتعتمد على صلاحيات الحساب."},
+   {c:"Gemini داخل Docs", q:"ما أمثلة على أوامر لتطوير ورقة العمل؟", a:"من الورشة: «اجعل كل العلامات أرقامًا كاملة» (لأنه وزّع في إحدى التجارب أنصاف وأرباع علامات)؛ «أضف تمرينًا آخر في آخر الملف، اجعله أصعب قليلًا للطلاب المتفوقين، واكتب عليه علامة بونص»؛ «افحص ورقة العمل من جديد، قسّم العلامات، لائم الأسئلة للموضوع، أضف أسئلة إذا وجدت نقصًا، واجعلها جاهزة للنشر». ومن العرض: «طوّر ورقة العمل الحالية: حسّن الأسئلة وأضف جدول تقييم ومفتاح إجابة منفصلًا للمعلم. نسّقها بالعربية من اليمين لليسار واجعلها مناسبة للطباعة.»"},
+   {c:"Gemini داخل Docs", q:"لماذا لا نأخذ ورقة العمل جاهزة كما أخرجها الذكاء الاصطناعي؟", a:"بحسب عامر، المعلم يجب أن يمر على الورقة: يضيف سؤالًا، يحذف سؤالًا، ويعدّل. الذكاء الاصطناعي يعمل الجزء الأكبر من العمل، والمعلم يكمل الباقي، وهكذا لا يفقد المعلم دوره وقيمته. ومع الوقت، كلما شرحنا له ما نريد، يتعلم منا ويعطي نتيجة أقرب من المرة الأولى."},
+   {c:"Gemini داخل Docs", q:"هل يستطيع Gemini إضافة صورة إلى ورقة العمل داخل Docs؟", a:"في الورشة طُلب منه إضافة سؤال مع صورة لمراحل دورة الماء ومخزن كلمات، لكن إنشاء الصورة لم ينجح وظهرت رسالة عن حد الطلبات، فاقترح كتابة السؤال ومخزن الكلمات بدون صورة. الحل العملي: إنشاء الصورة بأداة أخرى ثم نسخها ولصقها في المستند. إحدى المشاركات أشارت إلى أن ChatGPT يعطيها نتائج أفضل في الصور."},
+   {c:"الحفظ في Drive", q:"كيف أحفظ الملف في مجلد منظم؟", a:"من المستند: «ملف» ثم «نقل» (أو السهم بجانب اسم الملف)، ونختار المجلد. يوصي عامر بمجلد رئيسي للمعلم، وبداخله مجلد لكل سنة دراسية، وبداخله مجلد لكل صف تعلّمه. هكذا تبقى الملفات مرتبة، ويتعرّف Drive وGemini على عملك مع الوقت."},
+   {c:"جداول البيانات", q:"هل يستطيع Gemini إنشاء جدول علامات (Excel)؟", a:"في تجربة الورشة طُلب في Canvas «جدول بيانات لشهادة طلاب في المواضيع الأساسية». Gemini أنشأ جدولًا، لكن عند التصدير حوّله إلى مستند Docs وليس إلى Sheets، ولم يحسب المعدلات. الحل: نسخ الجدول (Ctrl+C)، فتح جدول بيانات فارغ في Google Sheets، لصقه، ثم «إدراج» «دالة» AVERAGE لحساب المعدل."},
+   {c:"الخصوصية", q:"هل يمكن استخدام بيانات طلاب حقيقية؟", a:"لا. الخصوصية أولًا: لا تستخدم بيانات طلاب حقيقية (أسماء، علامات أو تفاصيل شخصية) في البرومبت أو في الملفات التي تعمل عليها مع الذكاء الاصطناعي."},
+   {c:"التطبيق", q:"ما هو التحدي العملي في نهاية الورشة؟", a:"خمس خطوات: 1) اختر صفًا وموضوعًا وحدّد هدفًا تعليميًا واحدًا. 2) أنشئ مسودة بسيطة في Gemini Canvas. 3) صدّرها إلى Google Docs وافتح المستند. 4) استخدم Gemini داخل Docs لإضافة التقييم والإجابات. 5) راجع النسخة المطوّرة ثم شارك رابط المستند. يوصي عامر بالتجربة في نفس اليوم ولو على مهمة واحدة، لأن ما لا نجربه يُنسى خلال يوم أو يومين."},
+   {c:"التطبيق", q:"أعلّم بلغة الإشارات. هل تساعد هذه الطريقة في إنشاء صور للإشارات؟", a:"في الورشة أوصى عامر باستخدام ChatGPT لإنشاء الصور، مع وصف دقيق قدر الإمكان، والتعديل عليها خطوة بعد خطوة. مع ذلك قال إنه لا يملك خبرة في ملاءمة الذكاء الاصطناعي للتربية الخاصة، وأحال إلى ورشات أخرى في الأسبوع تتناول هذا الموضوع."}
+  ]
+ },
+ 2: {
+  recording:"https://drive.google.com/file/d/1ZHrSDTVTR9I4Rgc7-ww2rIMKWsrqngQH/view?usp=sharing",
+  slides:"https://www.canva.com/design/DAHIxnt9IwU/L7Yt_m0-u0BO4USvGZ_vIA/view",
+  summary:"ליאת הציגה איך NotebookLM משמש כ״ציוד הישרדות״ לתלמידים עם לקויות למידה, דרך שישה מקרי בוחן: פישוט טקסט, תמיכה חזותית, למידה בשמיעה, בניית פיגומים לכתיבה, מרחב מוגן לשאלות ושליפה פעילה. בחלק המעשי המשתתפים התנסו ב״משימות חילוץ״ לפי פרופילים של תלמידים. הסדנה נבנתה יחד עם מורן זעפרני ושלומית שראל מהאגף ללקויות למידה.",
+  faq:[
+   {c:"פישוט טקסט", q:"איך עוזרים לתלמיד שנתקע מול טקסט אקדמי עמוס?", a:"מעלים את הטקסט ל-NotebookLM ומבקשים פישוט שפה ושבירת רצף. דוגמה לפרומפט: ״הסבר לי את עיקרי המאמר בשפה פשוטה, כאילו אני בן 12״, או ״כתוב מחדש את הפסקה הזו בנקודות קצרות וברורות״. כך הסרת חסם הקריאה מאפשרת להגיע לתוכן עצמו."},
+   {c:"פישוט טקסט", q:"מה עושים עם תלמידה דיסלקטית מול מאמר ארוך?", a:"במשימת החילוץ הראשונה (״חולות הדחיינות וההצפה״) הפרופיל הוא מאיה, דיסלקטית עם קשיי זיכרון עבודה, מול מאמר של 15 עמודים בהיסטוריה. הפעולה: ״סרוק את המאמר והוצא 10 מושגים קשים, כתוב מילון מונחים קצר שמסביר כל מושג במשפט אחד פשוט״, ו״סכם לי את עמודים 1-3 בלבד, ב-4 נקודות מרכזיות״. השאלה לדיון: איך זה משנה את החוויה לפני המפגש עם הטקסט?"},
+   {c:"תמיכה חזותית", q:"איך עוזרים ללומדים חזותיים מול טקסט ארוך?", a:"משתמשים בכלים שבצד ה-Studio של NotebookLM ליצירת מפת מושגים (Mind Map) או אינפוגרפיקה מתוך חומרי הלימוד. בדוגמה מהמצגת, למידה למבחן בביולוגיה על מערכות הגוף: התוצאה היא עוגנים חזותיים בזיכרון העבודה והמחשה גרפית של הקשרים בין המערכות."},
+   {c:"למידה בשמיעה", q:"איך NotebookLM עוזר לתלמידים שמתקשים בקריאה?", a:"בעזרת סקירה קולית (Audio Overview): הכלי יוצר שיחה בין שני ״דוברים״ שמסבירים את החומר מתוך המקורות. לדוגמה, לתלמיד עם דיסלקציה מול רשימת קריאה ארוכה בספרות: הוא מקבל את ״התמונה הגדולה״ דרך האוזן, בזמן נסיעה או מנוחה, לפני שהוא ניגש לקרוא את הטקסט עצמו."},
+   {c:"פיגומים לכתיבה", q:"איך עוזרים לתלמיד עם קשיים בתפקודים ניהוליים לכתוב עבודה?", a:"בונים פיגומים לכתיבה ולא כותבים במקומו. דוגמה לפרומפט: ״צור לי ראשי פרקים לעבודה על סמך המקורות שלי״, או ״עזור לי לנסח משפט פתיחה לכל פסקה״. המודל לא כותב במקום התלמיד (והוא מגובה במקורות), אלא מספק את השלד הלוגי שעליו התלמיד בונה את התוכן."},
+   {c:"פיגומים לכתיבה", q:"מה עושים כשתלמיד קופא מול ״הדף הריק״?", a:"במשימת החילוץ השנייה הפרופיל הוא רון, תלמיד עם קושי בתפקודים ניהוליים שמתקשה במשימת כתיבה מורכבת. הפעולה: ״מצא שתי נקודות דמיון ונקודת מחלוקת אחת בין המקורות שהעליתי״, ואז ״בנה לי שלד (Outline) לחיבור בן 4 פסקאות, עבור כל פסקה כתוב רק משפט פתיחה״. השאלה לדיון: הפיגום מול המעלית, איך מוודאים שהכלי לא כותב במקום התלמיד?"},
+   {c:"מרחב מוגן", q:"איך עוזרים לתלמיד שמתבייש לשאול שאלות ״פשוטות״?", a:"NotebookLM יכול לשמש מרחב לשאלות בלי שיפוטיות. דוגמה לפרומפט: ״מה הכוונה במילה X בהקשר הזה?״ או ״תן לי דוגמה מהחיים למושג Y שמוזכר בטקסט״. התוצאה: סביבת למידה ספציפית לתלמיד, שמאפשרת לסגור פערים בלי בושה."},
+   {c:"שליפה פעילה", q:"איך עוזרים לתלמיד להעביר מידע לזיכרון לטווח ארוך?", a:"יוצרים עזרי זיכרון אוטומטיים מתוך החומר: כרטיסיות (Flashcards) או שאלון אמריקאי (Quiz). לדוגמה, שינון מונחים לבחינה במדעים או באנגלית. כך הלמידה הופכת לפעילה, והתלמיד מתרגל ״שליפה״ במקום לקרוא שוב ושוב."},
+   {c:"שליפה פעילה", q:"מה עושים עם תלמיד שקורא שוב ושוב ועדיין ״מתרסק״ במבחן?", a:"במשימת החילוץ השלישית (״אשליית הידיעה״) הפרופיל הוא דני מחטיבת הביניים, לומד פסיבי שקורא ובטוח שהוא יודע. הפעולה היא אימון בדו-קרב: ״מעכשיו אתה המורה. שאל אותי שאלות אמריקאיות, אחת בכל פעם. חכה לתשובה. אם טעיתי, תן לי רק רמז קטן.״ כתרגיל, עונים בכוונה תשובה שגויה כדי לראות את הרמז. נקודה לדיון: מעורבות (Engagement) ומעבר ללמידה אקטיבית."}
+  ]
+ },
+ 4: {
+  recording:"https://drive.google.com/file/d/1xmW3Nd5ZIPk3HULZPcoRZL7vYU4qLX3j/view",
+  gallery:Array.from({length:6},(_,i)=>`slides/meir/s-${i+1}.jpg`),
+  summary:"מאיר הציג איך הופכים את Gemini הארגוני לעוזר הוראה אישי: מחברים אותו לאפליקציות של Google (Gmail, יומן ודרייב), מסדרים את הדרייב כך ש-Gemini ימצא את החומרים (כולל מערכת שעות), ובונים סקיל של ״עוזר הוראה״ שמפעילים מכל שיחה. בסדנה: סיכום מייל מהמנהל, שליפת מערכת השעות, דף עבודה בעברית לכיתה ז׳, סקיל שמסכם כל מוצאי שבת את המייל השבועי, ומבנה PTCF לכתיבת פרומפט לסקיל. בסוף: הסבר על סידור הדרייב.",
+  faq:[
+   {c:"חיבור לאפליקציות", q:"איך מחברים את Gemini ל-Gmail, ליומן ולדרייב?", a:"במסך הראשי של Gemini לוחצים על גלגל השיניים (הגדרות), בוחרים ״אפליקציות מקושרות״, לוחצים על Google Workspace, ואז ״קישור״ ו״התחברות״. מרגע זה Gemini יכול לקרוא את המיילים, היומן והדרייב שלכם. כדי לבדוק, שאלו ״מה יש לי ביומן מחר?״ או בקשו ״מצא את המייל מאתמול מ... וסכם לי אותו״."},
+   {c:"חיבור לאפליקציות", q:"החיבור לא עובד. מה עושים?", a:"קודם כל ודאו שאתם בחשבון הארגוני. אם מופיעה הודעה שצריך להפעיל את ״התכונות החכמות״ של Google Workspace, לחצו ״המשך״ ואשרו את שתי ההגדרות. לפעמים לוקח כמה דקות ואפילו חצי שעה עד שהחיבור מתחיל לעבוד, אז תנו לו זמן. אפשר לפנות גם למדריך התקשוב."},
+   {c:"חיבור לאפליקציות", q:"למה עדיף Gemini הארגוני על כלים אחרים?", a:"בחשבון הארגוני הנתונים לא משמשים לאימון המודלים, והוא הכלי שמאושר לשימוש במשרד החינוך. אפשר לחבר גם את ChatGPT או Claude לחשבונות שלכם, אבל אז אסור להעלות מידע על תלמידים. ובכל מקרה, גם ב-Gemini הארגוני לא מעלים שמות או ציונים של תלמידים. אפשר לחבר גם חשבון פרטי, אבל לשימוש אישי בלבד, בלי נתוני עבודה."},
+   {c:"סידור הדרייב", q:"איך לסדר את הדרייב כדי ש-Gemini ימצא את החומרים?", a:"ההמלצה של מאיר: תיקייה ראשית בשם בית הספר, ובתוכה תיקייה לשנת הלימודים הנוכחית (למשל תשפ״ז), כדי שחומרים משנים קודמות לא יתערבבו. בתוכה מסדרים כמו שנוח לכם, למשל לפי מקצוע וכיתה. בתיקיית השנה שמים קובץ של מערכת השעות, כדי ש-Gemini יוכל לענות ״מה אני מלמד מחר?״."},
+   {c:"סידור הדרייב", q:"באיזה פורמט לשמור את מערכת השעות?", a:"כקובץ טקסט: Sheets או Excel (הכי נוח), Docs, Word או מצגת. לא כתמונה (JPG או PNG), כי Gemini לא קורא את התוכן של תמונה בדרייב."},
+   {c:"סידור הדרייב", q:"Gemini לא מוצא קובץ שמישהו שיתף איתי. למה?", a:"Gemini קורא רק קבצים שנמצאים בדרייב שלכם (״האחסון שלי״), ולא קבצים שמשותפים איתכם ונמצאים בדרייב של מישהו אחר. הפתרון: לפתוח את הקובץ, ״קובץ״, ״יצירת עותק״, ולהעביר את העותק לתיקייה המתאימה. שימו לב: אם הקובץ המשותף עדיין מתמלא על ידי אחרים, העותק שלכם לא יתעדכן."},
+   {c:"סידור הדרייב", q:"מה ההבדל בין ״האחסון שלי״, ״פריטים ששותפו איתי״ ו״דף הבית״?", a:"״האחסון שלי״: מה שאתם יצרתם או העליתם. ״פריטים ששותפו איתי״: קבצים שאחרים יצרו ושיתפו איתכם. ״דף הבית״: המלצות של Google לפי מה שפתחתם לאחרונה, ולכן הוא נראה מבולגן. כדי לראות את התיקיות שלכם, עבדו מ״האחסון שלי״. קובץ חדש פתוח רק לכם, עד שתשנו את הגדרות השיתוף."},
+   {c:"עוזר הוראה", q:"איך מקבלים דף עבודה מדויק?", a:"נותנים כמה שיותר פרטים שהכלי לא יודע: הכיתה, אופי התלמידים, הנושא, איפה אתם בחומר, משך, סוגי השאלות (למשל שאלות סגורות למתקשים ופתוחות למתקדמים). אפשר לבקש מבנה מסוים, כמו ״חלק ראשון: הקנייה ודוגמאות, חלק שני: תרגול״, ואם צריך ״שים לב שמדובר בעברית, יישור לימין״. אפשר גם להפנות לקובץ בדרייב: ״צור לי דף בסגנון של הקובץ הזה, בנושא אחר״. ותמיד לבדוק את התוצאה."},
+   {c:"סקילים", q:"מה ההבדל בין Gem לסקיל?", a:"שניהם ״פרומפט קבוע״ עם תפקיד ורצף הוראות. Gem נפתח במסך נפרד משלו. סקיל מופעל מתוך השיחה הרגילה: כותבים / ואת שם הסקיל. לפי מאיר, Google מחליפה בהדרגה את ה-Gems בסקילים."},
+   {c:"סקילים", q:"איך יוצרים סקיל?", a:"בצד ״עוד״ (שלוש נקודות), ״התאמה אישית״, ולמעלה ״סקילים״, ואז ״יצירה״. שלוש דרכים: יצירה עם Gemini (הוא שואל שאלות ובונה את הסקיל; אם הוא עונה באנגלית, בקשו עברית), יצירה ידנית (שם, תיאור ופרומפט), או העלאת קובץ סקיל קיים. אחרי היצירה אפשר לערוך, להוריד או למחוק. דוגמה מהסדנה: סקיל שבכל מוצאי שבת ב-21:00 קורא את המייל השבועי מהמנהל ומסכם אותו."},
+   {c:"סקילים", q:"איך כותבים פרומפט טוב לסקיל?", a:"לפי PTCF: Persona (מי הוא, למשל ״עוזר הוראה אישי״), Task (מה בדיוק לעשות), Context (באיזה בית ספר, אילו כיתות ומקצועות, איפה מערכת השעות), ו-Format (מה התוצר: דף עבודה, מצגת, סיכום מייל). מאיר שיתף בסדנה פרומפט מוכן של ״עוזר הוראה״, שאם חסר לו מידע הוא שואל אתכם בעצמו. הקישור אליו נשלח בצ׳אט של הסדנה (נפתח עם החשבון הארגוני)."}
+  ]
+ },
+ 23: {
+  slides:"https://www.canva.com/design/DAHbXjG3MgQ/_d3cmkOrRLVA8Cdph98nrw/view",
+  note:"עקב תקלה, לא קיימת הקלטה לסדנה זו.",
+  summary:"ד״ר ישראל נעים הציג בניית עוזר פדגוגי אישי ב-Gemini, צעד אחר צעד: בוחרים משימה שחוזרת כל שבוע, מקימים Gem, מגדירים תפקיד, קהל וכללי עבודה, משכתבים את ההוראות, מצרפים מסמך ידע, בודקים בתצוגה מקדימה ומשפרים. בנוסף: ההבדל בין Gem לסקיל, והנחיות לשימוש לפי גיל.",
+  faq:[
+   {c:"מתחילים מצורך", q:"לאיזו משימה כדאי לבנות עוזר?", a:"למשימה שחוזרת אצלכם כל שבוע. דוגמאות מהסדנה: סיכום ישיבות הנהלה וצוות לרשימת משימות עם אחראים ולוחות זמנים; עדכון שבועי קצר להורים על הנלמד והמשימות לשבוע הבא; עיבוד רשמים מתצפיות לדוח משוב אחיד; התאמת מערכי הדרכה להרכב הצוות, לשכבת הגיל ולמקצוע."},
+   {c:"מתחילים מצורך", q:"מה ההבדל בין Gem לסקיל?", a:"Gem הוא עוזר אישי קבוע שפותחים בחלון נפרד למשימה מוגדרת, בלי להסביר לו את ההקשר מחדש בכל שיחה. סקיל הוא מיומנות מוגדרת מראש שמזמנים עם / או @ בתוך כל שיחה רגילה, ואפשר לשלב כמה סקילים יחד. בסדנה בנו Gem, וסקיל השאירו להמשך."},
+   {c:"בונים את העוזר", q:"איך מקימים את ה-Gem?", a:"ב-Gemini נכנסים ל״הגדרות ועזרה״, בוחרים Gems ואז New Gem, ונותנים שם ברור (בסדנה: ״העוזר הפדגוגי שלי | מחוז דרום״)."},
+   {c:"בונים את העוזר", q:"מה כותבים בהוראות של העוזר?", a:"תפקיד: למשל יועץ פדגוגי וטכנו-פדגוגי במערכת החינוך בישראל. קהל: מורים, מנהלים ומפקחים, ובמה הוא מסייע: לתכנן פעילויות, לנתח למידה ולנסח תוצר ישים. כללי עבודה: מבנה התשובה (רעיון מרכזי, צעדים לביצוע, התאמה לקהלים), עברית ברורה, ו״אם חסר מידע, שאל עד 3 שאלות ואז המתן״."},
+   {c:"בונים את העוזר", q:"איך משפרים את ההוראות בעזרת Gemini?", a:"שומרים קודם עותק של הנוסח המקורי, ואז משתמשים ב-Use Gemini to re-write instructions. משווים בין הנוסחים: מה התחדד ומה כדאי להסיר, ובוחרים שינוי אחד. כך משפרים בלי לאבד את הכוונה שלכם."},
+   {c:"בונים את העוזר", q:"איך מוסיפים לעוזר ידע מקצועי?", a:"ב-Knowledge בוחרים Add files ומצרפים מסמך (למשל חוזר או מסמך מדיניות), ללא מידע אישי. אחר כך בודקים: מבקשים מהעוזר להפנות לסעיף ספציפי במסמך, ומאמתים את ההפניה במקור עצמו."},
+   {c:"בודקים ומשפרים", q:"איך בודקים שהעוזר עובד?", a:"בתצוגה המקדימה (Preview) נותנים לו בקשה אמיתית, למשל ״הכן דיון קצר על אמינות הודעה ברשת, כיתה ח׳, 15 דקות, לוח וטוש״, ובודקים שלושה דברים: מבנה, מטרה והפניה למקור. אם הכול תקין, לוחצים Save."},
+   {c:"בודקים ומשפרים", q:"איך משפרים את העוזר אחרי שהוא עובד?", a:"מוסיפים להוראות חידוד אחד, למשל ״ליד כל שלב ציין משך, וודא שסכום הזמנים תואם לזמן שהוגדר״, שומרים, ומריצים שוב את אותה בקשה כדי לראות מה השתנה. ההמלצה: שלוש התנסויות בשבוע הקרוב, כל אחת עם אותה משימה ותיקון אחד."},
+   {c:"אחריות", q:"מה מותר לתלמידים לפי גיל?", a:"לפי מצגת הסדנה: א׳ עד ג׳: ללא שימוש של תלמידים בבינה מלאכותית יוצרת. ד׳: בוט המשרד בלבד ובפיקוח. ה׳ עד ו׳: כלים ייעודיים בשליטת מורה או בוט המשרד. מכיתה ז׳: עצמאות לפי הגיל של הכלי בקטלוג. מכיתה ד׳ נדרשים אישור הורים וחלופה. ותמיד: שיקול דעת אנושי ושמירה על פרטיות."}
+  ]
+ },
+ 7: {
+  recording:"https://docs.google.com/videos/d/1vgPmIoKcJ4X5bIeCG9oSl7qQl7m6UnqyRRyakeowz7Y/play",
+  slides:"https://canva.link/kcorcxwcrhuzosd",
+  site:"https://canva.link/rutsx2wmyibhac5",
+  siteLabel:"למאגר הפרומפטים של הסדנה",
+  summary:"חדוה הציגה איך הופכים חומר לימוד שכבר יש לכם למשאבים מגוונים ב-NotebookLM, כדי לתת מענה לצרכים שונים של תלמידים. נקודת המוצא היא פדגוגית: קודם מגדירים את מטרת הלמידה ואת הצרכים שזוהו בכיתה, ורק אז בוחרים את התוצר המתאים, למשל בוחן קצר, הסבר קולי או מצגת חזותית. לסדנה מצורף מאגר פרומפטים.",
+  faq:[
+   {c:"מה זה NotebookLM", q:"מה פירוש השם NotebookLM?", a:"Notebook היא מחברת, ו-LM הוא Language Model, מודל שפה. כלומר: מחברת חכמה שבה אפשר לשאול שאלות על החומרים שבחרתם להעלות אליה. התשובות והתוצרים מבוססים על המקורות שלכם."},
+   {c:"מה זה NotebookLM", q:"למה להתחיל מחומר שכבר לימדתי בכיתה?", a:"כי חומר הוראה מוכר מהכיתה הוא נקודת מוצא טובה: התוצרים יתאימו בדיוק למה שלימדתם. מקור אחד ב-NotebookLM יכול להפוך לבוחן, לכרטיסי תרגול ולסקירה קולית, כך שמקבלים עוד רעיונות להוראה ומשקיעים פחות זמן בטיוטה הראשונה."},
+   {c:"בחירת התוצר", q:"איך מחליטים איזה תוצר ליצור?", a:"מתחילים מהתלמידים, לא מהכלי: מה הנושא ומה מטרת הלמידה? אילו צרכים או קשיים זיהיתם בכיתה? מה התלמידים יוכלו להסביר או לבצע בעצמם בסוף השיעור? ואז שואלים: מה יעזור לתלמיד להתקדם (תיווך, תרגול, משוב או העמקה), ואיזה משאב ישרת את המטרה (תרשים, הסבר קולי, סרטון או בוחן). הבחירה תלויה בתלמיד, במשימה ובשלב הלמידה."},
+   {c:"בחירת התוצר", q:"איך אותו חומר נותן מענה לתלמידים שונים?", a:"דוגמה מהסדנה: תלמידה שקוראת את ההסבר וצריכה המחשה תקבל מצגת חזותית או תרשים; תלמיד שמבין בשיעור ורוצה לחזור על ההסבר בבית יקבל הסבר קולי; וכדי לדעת מי כבר יכול להסביר את הרעיון במילים שלו, יוצרים בוחן קצר. כך ממקור אחד נוצרים שלושה תוצרים, כל אחד לצורך אחר."},
+   {c:"בחירת התוצר", q:"מה כל תוצר משרת?", a:"בוחן קצר: בדיקת הבנה ומתן משוב. הסבר קולי: חזרה עצמאית בקצב אישי. מצגת חזותית: המחשה של הקשרים בין מושגים. התאמת התוצר היא החלטה פדגוגית, לא טכנית."},
+   {c:"משאבים נוספים", q:"איפה אפשר למצוא פרומפטים מוכנים?", a:"חדוה שיתפה בסדנה מאגר פרומפטים מלווה. הקישור אליו נמצא בכפתור ״למאגר הפרומפטים של הסדנה״ בראש העמוד."}
+  ]
+ },
+ 12: {
+  recording:"https://drive.google.com/file/d/14MZjou1H4Ew_U4igE4hoRDL0Ze466tBi/view?usp=sharing",
+  slides:"https://canva.link/f2pyus8qegnc5l4",
+  lang:"ar",
+  summary:"הסדנה הועברה בשפה הערבית. ראניה הציגה איך מעצבים משחקים לימודיים ממוחשבים: מה הופך משחק לימודי לטוב (מטרה, קהל, שלבים, עיצוב חזותי, הוראות ומשוב), סוגי משחקים, ותהליך עבודה שבו כותבים פרומפט מקצועי בעזרת ChatGPT ובונים את המשחק ב-Gemini Canvas בחשבון הארגוני. בהדגמה: חדר בריחה בדקדוק ערבית לכיתה ד׳ ומשחק תלת-ממדי על לוח הכפל לכיתה ג׳. השאלות הנפוצות כתובות בערבית.",
+  summaryAr:"ورشة حول تصميم ألعاب تعليمية محوسبة: ما الذي يجعل اللعبة التعليمية ناجحة، أنواع الألعاب، كتابة برومبت احترافي بمساعدة ChatGPT وبناء اللعبة في Gemini Canvas بالحساب المؤسسي، مع أمثلة لغرفة هروب في قواعد اللغة العربية للصف الرابع ولعبة ثلاثية الأبعاد لجدول الضرب للصف الثالث.",
+  faq:[
+   {c:"لماذا ألعاب تعليمية", q:"لماذا نصمّم ألعابًا تعليمية؟", a:"لأن الطالب يتعلّم من خلال التجربة والتحدّي، وما يجرّبه يترك أثرًا ويترسّخ أكثر. الطلاب جيل تكنولوجيا، واللعبة تتيح تعلّمًا ذاتيًا ممتعًا. الهدف ليس الترفيه فقط، بل تحقيق أهداف المادة أو مراجعتها."},
+   {c:"لماذا ألعاب تعليمية", q:"ما الفرق بين لعبة تعليمية وسؤال عادي؟", a:"اللعبة التعليمية رحلة مستمرة: تفاعل، تحديات، مستويات، تغذية راجعة وجمع نقاط، بينما السؤال التقليدي ينتهي بإجابة واحدة. لذلك تبقى اللعبة أكثر جذبًا للطالب."},
+   {c:"تصميم اللعبة", q:"ما العناصر الأساسية في لعبة تعليمية ناجحة؟", a:"1. هدف تعليمي واضح. 2. الفئة: الصف والعمر والمستوى والمادة. 3. عدة مستويات لتكون أكثر تحدّيًا. 4. تصميم بصري جذّاب: مؤثرات، شخصيات قريبة من الطالب، جمع نقاط. 5. تعليمات بسيطة وواضحة في البداية. 6. تغذية راجعة على كل سؤال."},
+   {c:"تصميم اللعبة", q:"ما أنواع الألعاب التي يمكن بناؤها؟", a:"ألعاب أسئلة ومسابقات، مطابقة، تحدّيات بمستويات، ألعاب ثلاثية الأبعاد، غرف هروب محوسبة، ألعاب بحث واكتشاف وتحقيق، ألعاب شخصيات، وألعاب ذاكرة. تفضّل رانيا الألعاب التي فيها تحدٍّ ومغامرة، مثل غرف الهروب، لأنها تدفع الطالب للتفكير والتعلّم الذاتي."},
+   {c:"خطوات البناء", q:"ما خطوات بناء اللعبة؟", a:"1. تحديد الهدف التعليمي (مثلًا: القواعد لطلاب الصف الخامس). 2. تحديد الفئة والمستوى. 3. اختيار نوع اللعبة. 4. كتابة برومبت احترافي. 5. بناء اللعبة في Gemini Canvas. 6. تجربة اللعبة وفحص الرابط. 7. مشاركتها مع الطلاب."},
+   {c:"خطوات البناء", q:"كيف أكتب برومبت احترافيًا للعبة؟", a:"في الورشة استُعين بـ ChatGPT لكتابة البرومبت، لأنه يعطي أفكارًا أوسع. اكتبوا له مثلًا: «اكتب لي برومبت احترافيًا للعبة تعليمية محوسبة من نوع غرفة هروب، للصف الرابع، في قواعد اللغة العربية. الهدف: أن يفهم الطالب أساسيات القواعد. تصميم مبدع بألوان ومؤثرات، تعليمات بسيطة في البداية، وخانة لاسم الطالب». ثم انسخوا البرومبت الناتج إلى Gemini."},
+   {c:"خطوات البناء", q:"لماذا لم تُبنَ اللعبة في Gemini؟", a:"على الأغلب لم تختاروا Canvas. قبل لصق البرومبت اضغطوا على زر «+» واختاروا Canvas. بدون ذلك يعيد Gemini صياغة البرومبت فقط ولا يبني اللعبة. ويُفضَّل الدخول إلى Gemini بالحساب المؤسسي (الوزاري) لأنه أكثر أمانًا."},
+   {c:"خطوات البناء", q:"كيف أعدّل اللعبة بعد بنائها؟", a:"في نفس المحادثة اكتبوا التعديل المطلوب، مثلًا «أضف اسم الصف» أو «أضف موسيقى في الخلفية»، فيعدّل Gemini اللعبة. ثم جرّبوها كطالب: أدخلوا اسمًا، اقرأوا التعليمات، أجيبوا على الأسئلة، وتأكّدوا أن جمع النقاط والمفاتيح يعمل حتى النهاية."},
+   {c:"المشاركة مع الطلاب", q:"كيف أشارك اللعبة مع الطلاب؟", a:"بعد التجربة انسخوا رابط اللعبة (وليس الكود) من خيار المشاركة. في الحساب المؤسسي، إن لم يظهر خيار المشاركة برابط، صدّروا اللعبة إلى Google Sites وانشروا الموقع (التفاصيل في ورشة نهاد مصري وورشة آشر نحماني). يمكن نشر الرابط في Classroom، في مجموعات الصف، أو عرض اللعبة على الشاشة في الحصة كتحدٍّ بين مجموعات، أو خلال لقاء Meet."},
+   {c:"المشاركة مع الطلاب", q:"كيف تساعد الألعاب في تشجيع الدخول إلى Classroom؟", a:"عندما تكون المهمة في Classroom لعبةً ممتعة، يدخل الطلاب إلى الصف الافتراضي بدافع أكبر. هكذا تتحوّل المهمة المطلوبة إلى تجربة تعلّم ممتعة."}
+  ]
+ },
+ 17: {
+  recording:"https://drive.google.com/file/d/13S_BVVMkiElhA_tab-zLedA9L20bVmjb/view?usp=sharing",
+  slides:"https://docs.google.com/presentation/d/1ie8bUtTh-BXjkVmHWfJvhNgsIH4Nj7_u/edit?usp=sharing",
+  summary:"אפרת, מדריכת תקשוב בחינוך המיוחד, פתחה בשאלה למה כלים מוכנים ברשת (כמו גלגל שאלות) ״כמעט מתאימים, אבל לא מדויקים פדגוגית״, והציגה את Vibe Coding כדרך לבנות כלים לפי הצורך שלכם. בסדנה: שלושה סוגי תוצרים (משחק, סימולציה והמחשה) עם דוגמאות, אנטומיה של פרומפט, תכנון אפליקציה עם Gemini לפני Canvas, בדיקות לפני שיתוף, ושתי דרכים לפרסם ב-Google Sites.",
+  faq:[
+   {c:"למה לבנות בעצמי", q:"למה לבנות כלי בעצמי אם יש כלים מוכנים ברשת?", a:"כי כלים מוכנים לרוב ״כמעט מתאימים, אבל לא מדויקים פדגוגית״: הממשק באנגלית, אין כתיבה מימין לשמאל, רמת הקושי לא מתאימה, אי אפשר לערוך את אוצר המילים, או שהכלי לא מגיב נכון כשהתלמיד מזין טקסט במקום מספר. ב-Vibe Coding אתם קובעים את החוקים, למשל גלגל שאלות שנותן רמז אחרי טעות וניקוד לכל תלמיד."},
+   {c:"למה לבנות בעצמי", q:"מה זה Vibe Coding, ומה התפקיד שלי בו?", a:"מתארים לבינה המלאכותית בשפה טבעית מה התוצר צריך לעשות, למי הוא מיועד ואיך הוא צריך להתנהג, והיא כותבת את הקוד וגרסה ראשונה. התהליך לא נגמר בבקשה אחת: בודקים, מזהים מה לא עובד, מבקשים תיקון וממשיכים. לא צריך לדעת לתכנת, אבל צריך לזהות צורך פדגוגי, לנסח דרישות מדויקות ולבחון את התוצאה בעין ביקורתית. אלה בדיוק המיומנויות שרוצים לפתח גם אצל התלמידים."},
+   {c:"סוגי תוצרים", q:"מה אפשר ליצור?", a:"שלושה סוגים מרכזיים: משחק, שהופך תרגול לאתגר פעיל (ניקוד, שלבים, זמן, משוב מיידי), למשל משימת בריחה בכפל; סימולציה, שבה התלמיד פועל במצב מדומה, משנה משתנים ורואה תוצאות, למשל מערכת השמש; והמחשה, שהופכת רעיון מופשט למוחשי, למשל כלי שמראה אם עצם יצוף או ישקע לפי המסה והנפח. חשוב: מנגנון המשחק משרת את המטרה הפדגוגית, ולא להפך."},
+   {c:"סוגי תוצרים", q:"אילו דוגמאות הוצגו בסדנה?", a:"משימת בריחה בכפל עם תחנות ומפתחות; סימולציה של מערכת השמש; תרגול 25 מילים באנגלית, שנבנה מצילום של הלוח בכיתה, עם מבחן, כרטיסיות ״ידעתי / כדאי לתרגל שוב״; ואינפוגרפיקה על התא מ-NotebookLM, שהפכה ב-Canvas לפעילות עם נקודות חמות שנפתחות לפי הסדר: סרטון, שאלה ומשימה למחברת."},
+   {c:"כתיבת הפרומפט", q:"מה צריך לכלול בפרומפט?", a:"לא רק מה לבנות, אלא: למי (גיל, רמת ידע וצרכים), מה המטרה ומה התלמידים יתרגלו, איך התוצר נראה, מה התלמיד עושה, כמה שאלות ומאיזה סוג, איזה משוב הוא מקבל, ומה קורה כשהוא טועה. וגם איך התלמידים יפגשו את הכלי: ממשק בעברית מימין לשמאל, התאמה לטלפון וכפתורים גדולים, ומה קורה כשלוחצים ״שלח״ בלי לבחור תשובה או מזינים טקסט במקום מספר."},
+   {c:"כתיבת הפרומפט", q:"איך כדאי לבנות משוב בתוך הכלי?", a:"לא רק ״נכון״ או ״לא נכון״. אפשר לבקש רמז, תיבת הסבר, הכוונה לנקודה שכדאי לחשוב עליה, ורק אחר כך ניסיון נוסף. המטרה היא שהמשוב יהיה חלק מהלמידה. בדוגמה בסדנה, שאלה שהתלמיד טעה בה נכנסה אוטומטית ל״בנק חזרה״, ובשאלה פתוחה התלמיד מקבל קריטריונים לבדוק בעצמו את התשובה שלו."},
+   {c:"בנייה ב-Gemini", q:"למה כדאי לתכנן עם Gemini לפני שמפעילים Canvas?", a:"כי ב-Canvas כל בקשה מייצרת קוד מחדש, ו״פינג-פונג״ של תיקונים נוטה לתקוע את התהליך. במיוחד כשיש רק רעיון ואתם לא יודעים איך המשחק ייראה, עדיף קודם לשוחח עם Gemini בלי Canvas: לתאר את הצורך, לבקש שיעזור לתכנן את המבנה, ואפילו ״הצע הצעות לשיפור״. כשהתכנון מוכן, מפעילים Canvas (בכפתור +) ומבקשים ליצור את האפליקציה לפי התכנון."},
+   {c:"בנייה ב-Gemini", q:"Gemini נתקע אחרי הרבה תיקונים. מה עושים?", a:"מבקשים ממנו לכתוב את כל התכנון כפרומפט מסודר אחד, ופותחים איתו שיחה חדשה עם Canvas. וגם: לבחור את המודל המתאים לבנייה (בסדנה הומלץ על מודל החשיבה החדש), ולבקש בכל פעם שינוי ממוקד אחד. כדאי לציין גם מה לשמור, למשל ״הגדל את הכפתורים והוסף רמז לתשובה שגויה. שמור על התוכן ועל מבנה המשחק״, ולבדוק שוב אחרי כל שינוי."},
+   {c:"בדיקה ופרסום", q:"מה בודקים לפני שמשתפים עם תלמידים?", a:"מריצים את הכלי כמו תלמיד: האם הטקסט מוצג נכון מימין לשמאל, האם הוא נוח בטלפון, האם כל הכפתורים עובדים, ומה קורה בלחיצות מיותרות או כששולחים בלי למלא. הכלי צריך לא רק להיראות טוב, אלא גם לעבוד נכון, גם במצבים לא צפויים."},
+   {c:"בדיקה ופרסום", q:"איך מפרסמים ב-Google Sites, ומה עדיף?", a:"בחשבון הארגוני אין שיתוף בקישור ישיר, אז מפרסמים דרך Google Sites, בשתי דרכים: 1. ייצוא ישיר: ״ייצוא״, Google Sites, ונוצר אתר עם הכלי. מפרסמים עם כתובת באנגלית ומעתיקים את הקישור. החיסרון: כל שינוי בכלי יוצר אתר חדש. 2. הטמעת קוד: מעתיקים את הקוד מ-Canvas, יוצרים אתר ריק, ובצד בוחרים ״הטמעה״ ואז ״הדבקת קוד״. כשמשנים את הכלי, פשוט מחליפים את הקוד באותו אתר, והקישור נשאר."},
+   {c:"בדיקה ופרסום", q:"איך מוודאים שכל התלמידים יוכלו לפתוח את הכלי?", a:"לא לכל התלמידים יש את החשבון הארגוני בטלפון. לכן, בפרסום האתר, משנים את ההרשאות כך שכל מי שיש לו את הקישור יוכל לצפות (ולא רק משתמשי המחוז), ובודקים את הקישור מטלפון לפני השיעור."}
+  ]
+ },
+ 24: {
+  recording:"https://drive.google.com/file/d/1WtgLY42QKZBEiK2t0zi3nD5RP366BsZW/view?usp=sharing",
+  slides:"https://canva.link/0xypk4i47udjo0j",
+  summary:"טניה הדגימה צעד אחר צעד את Gemini שבתוך Classroom, ככלי שעוזר להעלות משימות לכיתה (וגם להגיע ליעד שעות הלמידה המקוונת). בסדנה: מערך שיעור על תכונות המרובעים לכיתה ד׳, מצגת שהועלתה כמטלה עם עותק לכל תלמיד, אינפוגרפיקה וקומיקס, ובעיקר יצירת בוחן שנכנס ישירות לכיתה, וקריטריונים להערכה שמחוברים למטלה. בסוף: לוח בחירה, טקסט ברמות ורשימת אוצר מילים.",
+  faq:[
+   {c:"היכרות", q:"למה להשתמש ב-Gemini שבתוך Classroom ולא ב-Gemini הרגיל?", a:"הוא בנוי במיוחד לעבודת המורה: מערכי שיעור, מטרות, משימות דיפרנציאליות כמו טקסטים ברמות ולוחות בחירה. חלק מהתוצרים נכנסים ישירות לכיתה, והוא עובד בסביבה הארגונית, שבה המידע מוגן. כך גם קל יותר להעלות משימות לכיתה באופן שוטף."},
+   {c:"היכרות", q:"איך נכנסים, ואילו כלים יש?", a:"נכנסים לבית הספר הווירטואלי, מזדהים ופותחים את Classroom, ובסרגל הצדדי לוחצים על Gemini. בראש הדף שלושה כלים פופולריים: ראשי פרקים למערך שיעור, יצירת מצגת ויצירת תמונות. מתחתם הכלים מחולקים לארבעה תחומים: תכנון שיעור, חומרי הוראה, בחינות ותמיכה בתלמידים. חלק מהכלים מופיעים ביותר מתחום אחד."},
+   {c:"היכרות", q:"מה ההבדל בין ״הוספה מהכיתה״ לבין ״כאן מתארים את הבוחן״?", a:"״הוספה מהכיתה״ מבססת את התוצר על חומר שכבר יש לכם בכיתה ב-Classroom או בדרייב. ״כאן מתארים את הבוחן״ (זה פשוט תרגום, ולא כל כלי הוא בוחן) מאפשרת לתאר במילים מה אתם רוצים, ו-Gemini יוצר בלי להסתמך על חומר שלכם."},
+   {c:"מערך שיעור ומצגת", q:"איך יוצרים מערך שיעור?", a:"בכלי ״ראשי פרקים למערך שיעור״ בוחרים חומר מהכיתה (או מתארים נושא), כותבים את רמת הכיתה, ואפשר להוסיף יעד למידה. מקבלים ראשי פרקים שאפשר לערוך, ליצור מחדש או לייצא ל-Docs. בלחיצה על ״יצירת מערך שיעור ב-Gemini״ עוברים ל-Gemini, שכותב לבד את הפרומפט ומחזיר מערך מלא: מטרות, חומרים, תפיסות שגויות נפוצות, פתיחה ופעילויות. את המערך לא משתפים עם התלמידים."},
+   {c:"מערך שיעור ומצגת", q:"איך הופכים מצגת למטלה שכל תלמיד עובד עליה?", a:"יוצרים מצגת בכלי, מדייקים אותה בשיחה, ומייצאים ל-Google Slides (אפשר גם ל-PowerPoint או PDF). ב-Classroom נכנסים לכיתה, לסביבת הלמידה, יוצרים מטלה ומצרפים את המצגת מהדרייב. בוחרים ״כל תלמיד יקבל עותק״, כך שכל אחד ממלא את המשימה שבמצגת ומגיש."},
+   {c:"מערך שיעור ומצגת", q:"אפשר להעלות תמונות של תלמידים כדי ליצור מהן קומיקס?", a:"לא. מורים לא מעלים תמונות של תלמידים לכלי בינה מלאכותית. אפשר ליצור קומיקס, אינפוגרפיקה או תמונה לפתיחת דיון לפי תיאור בלבד (בסדנה: סיפור חנוכה, וגלגולה של טיפה), להוריד ולהעלות לכיתה כחומר לימוד."},
+   {c:"בוחן", q:"איך יוצרים בוחן שנכנס ישירות לכיתה?", a:"בכלי ״יצירת בוחן״ בוחרים שכבה, נושא ומספר שאלות. Gemini מציע יעדי למידה, ואפשר לערוך אותם. בוחרים סוגי שאלות (אמריקאיות, נכון/לא נכון, תשובה קצרה או ארוכה, ואפשר לשלב). מקבלים שאלות עם תשובות נכונות, ומדייקים בשיחה (למשל ״סעיפים באותיות עבריות״, ״נקד״, ״החלף את שאלה 9״). בסוף בוחרים ״הוספה לכיתה״, בוחרים כיתה ו״בוחן״, ונוצרת מטלה עם טופס Google Forms שבודק את עצמו."},
+   {c:"בוחן", q:"מה חשוב לבדוק בבוחן לפני שמפרסמים?", a:"שהכותרת נכונה (Gemini נוטה לשנות אותה לפי ההוראה האחרונה), שהתשובות הנכונות מסומנות, שהניקוד והניסוח מתאימים לגיל. המלצה: להוסיף שאלה של שם התלמיד, כדי שהתוצאות יהיו מסודרות. התשובות לא מוצגות לתלמידים, והמורה מקבלת את תוצאות כולם."},
+   {c:"בוחן", q:"השיחה ב-Gemini של Classroom נשמרת?", a:"לא. כשעוברים לכיתה אחרת או יוצאים, מופיעה הודעה שהשינויים לא יישמרו. לכן חשוב לייצא את התוצר (ל-Forms, Docs, Sheets או לכיתה) לפני שיוצאים. מה שייצאתם נשמר בדרייב, ואפשר לשכפל ולהשתמש בו שוב בשנה הבאה."},
+   {c:"בוחן", q:"איך מגבילים או נועלים בוחן?", a:"ב-Classroom אפשר לקבוע מועד הגשה, ולהסתיר או לסגור את המטלה אחרי שהתלמידים סיימו, כך שלא יוכלו להיכנס שוב. נעילה מלאה של המחשב בזמן בוחן אפשרית במחשבי Chromebook. את מה שהתלמידים עושים במהלך הבוחן עצמו המורה צריכה להשגיח עליו."},
+   {c:"עוד כלים", q:"איך יוצרים קריטריונים להערכה ומחברים אותם למטלה?", a:"בכלי ״קריטריונים להערכה״ בוחרים רמת כיתה, מספר רמות ביצוע (למשל ארבע: מעל המצופה, במצופה, קרוב למצופה ומתחת למצופה), ומדביקים את הוראות המטלה או כותבים מה רוצים להעריך. מתקבלת טבלה מסודרת. מייצאים אותה ל-Sheets, ואז במטלה ב-Classroom נכנסים ל״עריכה״, ״קריטריון הערכה״, ומייבאים. כל תלמיד יראה כמה קיבל בכל קריטריון."},
+   {c:"עוד כלים", q:"מה עוד אפשר ליצור?", a:"לוח בחירה של משימות (אם התצוגה לא נוחה, מבקשים ״3 על 3 על חצי דף״; הלוח מתפרסם כקישור דרך Google Sites או מודפס), טקסט אינפורמטיבי בשלוש רמות (כדאי לבקש כל רמה בקובץ נפרד ומנוקד), ורשימת אוצר מילים מתוך טקסט, עם הגדרה ודוגמה לכל מילה, שאפשר להדפיס או להעלות לכיתה."},
+   {c:"עוד כלים", q:"על מה חשוב להקפיד?", a:"גם בתוך Classroom, Gemini יכול לטעות: לבדוק כל שאלה, ניקוד והתאמה לגיל. לא להעלות פרטים, שמות או תמונות של תלמידים. ולהתנסות בזמן הלמידה עצמה, כי כך זה נזכר הרבה יותר טוב."}
+  ]
+ },
+ 13: {
+  recording:"https://drive.google.com/file/d/1LlIr3Rm9AGKJ0ct3YAkDfP-j1DHbU9px/view?usp=drive_link",
+  slides:"https://docs.google.com/presentation/d/1JBc4uqCq7H8_010bxeT6mlB_cq5eMqvuFu1RRnsWMCg/edit?usp=drive_link",
+  summary:"שחר הציג איך לוקחים חומר למידה מודפס (דף עבודה, טקסט או מבחן) והופכים אותו בעזרת בינה מלאכותית לדף אינטראקטיבי, עם התאמות לתלמידים שצריכים אותן.",
+  faq:[
+   {c:"מתחילים", q:"מה היתרון של דף אינטראקטיבי על פני דף מודפס?", a:"בדף אינטראקטיבי התלמיד מקבל משוב מיידי, אפשר להוסיף הקראה, רמזים, תמונות ושלבים, ואפשר לבנות כמה גרסאות של אותו חומר לרמות שונות בלי להדפיס מחדש. הדף המודפס עדיין שימושי, והמטרה היא לתת אפשרות נוספת ולא להחליף אותו בכל מקרה."},
+   {c:"מתחילים", q:"איך מכניסים את החומר המודפס לכלי הבינה המלאכותית?", a:"מצלמים או סורקים את הדף ומעלים את התמונה או ה-PDF, או מעתיקים את הטקסט אם יש קובץ מקורי. כדאי לוודא שהצילום חד וישר, ואחרי ההעלאה לבדוק שהכלי קרא נכון את הטקסט, במיוחד בעברית, בניקוד ובמספרים."},
+   {c:"התאמות", q:"אילו התאמות אפשר לבקש?", a:"דוגמאות: הגדלת גופן וריווח, פיצול משימה ארוכה לשלבים קצרים, פחות שאלות בכל מסך, אוצר מילים או מחסן מילים, רמזים שנפתחים בלחיצה, שאלות סגורות במקום פתוחות, הקראה של ההוראות, ניסוח פשוט יותר. כדאי לכתוב בפרומפט למי ההתאמה מיועדת (בלי פרטים מזהים) ומה המטרה שלה."},
+   {c:"התאמות", q:"איך שומרים על אותה מטרה לימודית גם בגרסה המותאמת?", a:"כותבים בפרומפט במפורש מה התלמיד צריך לדעת או לעשות בסוף הדף, ומבקשים שההתאמה תשנה את הדרך ולא את התוכן. אחר כך משווים בין הגרסה המקורית לגרסה המותאמת ובודקים שלא ירדו נושאים חשובים."},
+   {c:"בדיקה ושיתוף", q:"מה חשוב לבדוק לפני ששולחים לתלמידים?", a:"שהתשובות הנכונות באמת נכונות, שהעברית והיישור לימין תקינים, שהכפתורים והמשוב עובדים, ושהדף נפתח טוב גם בטלפון. כדאי לנסות אותו בעצמכם כמו תלמיד לפני השיתוף."},
+   {c:"בדיקה ושיתוף", q:"אפשר להעלות דפים עם פרטי תלמידים?", a:"לא. מעלים רק את החומר הלימודי, בלי שמות, ציונים או פרטים אישיים של תלמידים, גם כשעובדים בחשבון הארגוני."}
+  ]
+ },
+ 5: {
+  slides:"https://canva.link/j3l5g2me70s0kfc",
+  note:"עקב תקלה, לא קיימת הקלטה לסדנה זו.",
+  summary:"סקילים לשיפור הכתיבה בעבודה החינוכית: איך מגדירים פעם אחת הנחיות קבועות לכתיבה, ומפעילים אותן שוב ושוב עם תוכן חדש, כדי לקבל כתיבה מדויקת, מותאמת לקהל ובסגנון האישי שלכם. בסדנה: מהו סקיל, הצורך הפדגוגי, רעיונות לשימוש בבית הספר, מבנה ההנחיות, והדרך לבנות את הסקיל הראשון בארבעה שלבים.",
+  faq:[
+   {c:"מהו סקיל", q:"מה זה סקיל?", a:"סקיל הוא אוסף הנחיות למשימה מוגדרת, שאפשר להפעיל שוב ושוב עם תוכן חדש. לדוגמה, סקיל לכתיבת משוב מקדם: ההנחיות קבועות (חוזקה, מוקד לשיפור וצעד מעשי), ובכל שימוש מזינים עבודת תלמיד אחרת."},
+   {c:"מהו סקיל", q:"מה סקיל יכול לכלול?", a:"תפקיד, מטרה וקהל יעד; כללי כתיבה, סגנון ומבנה התוצר; ודוגמאות, חומרי עזר וקריטריונים לבדיקה."},
+   {c:"מהו סקיל", q:"מתי כדאי לבנות סקיל?", a:"כשיש משימת כתיבה שחוזרת אצלכם, ובכל פעם דורשת שוב הסבר ותיקונים. אם אתם מוצאים את עצמכם מסבירים לבינה המלאכותית שוב ושוב את אותו טון, אותו מבנה ואותם כללים, זה סימן שהגיע הזמן לסקיל."},
+   {c:"הערך הפדגוגי", q:"מה סקיל נותן לעומת פרומפט רגיל?", a:"הצורך: להגדיר מראש את הקהל, השפה והטון; לשמור כללי כתיבה ודוגמאות רצויות; וקריטריונים קבועים לבדיקת הטקסט. התרומה: איכות עקבית, פחות תיקונים שחוזרים על עצמם, כתיבה מותאמת לתלמידים, להורים ולצוות, ושמירה על הקול האישי שלכם."},
+   {c:"הערך הפדגוגי", q:"לאילו משימות בבית הספר מתאים סקיל?", a:"רעיונות מהסדנה: הודעות להורים בקול שלכם, התאמת טקסט ללומדים, כתיבת הוראות למשימה לימודית, סיכום ישיבה להמשך עבודה, עריכת טקסט בפורמט מקצועי, וכתיבת משוב מקדם לתלמידים."},
+   {c:"בניית סקיל", q:"איך כותבים את ההנחיות לסקיל?", a:"לפי ארבעה רכיבים: Persona (תפקיד): באיזה תפקיד הכלי פועל. Task (משימה): מה עליו לבצע. Context (הקשר): למי כותבים ובאילו תנאים. Format (פורמט): איך התוצר צריך להיראות. כדאי להוסיף לפחות כלל איכות אחד ודוגמה לכתיבה רצויה, וגבולות ברורים לעריכה."},
+   {c:"בניית סקיל", q:"איך יוצרים סקיל ב-Gemini?", a:"ב-Gemini נכנסים להגדרות, ושם לעמוד Skills. יש כמה דרכים ליצור סקיל: 1. לכתוב בצ׳אט רגיל ״צור סקיל ש...״ ולתאר מה הוא צריך לעשות, ו-Gemini כותב לבד הנחיות מפורטות. 2. בעמוד Skills, ליצור סקיל עם Gemini או מתבנית מוכנה ולערוך אותה. 3. להעלות קובץ סקיל קיים. בעמוד Skills מופיעים גם סקילים מומלצים, הסקילים שיצרתם, וה-Gems הקודמים שלכם, כי Gems הוחלפו בסקילים. טיפ: סקיל יכול להפנות לסקילים אחרים, וכך אפשר לבנות תהליכי עבודה מורכבים יותר. סקילים זמינים גם בחשבון הארגוני וגם בחשבון האישי."},
+   {c:"בניית סקיל", q:"מה השלבים לבניית הסקיל הראשון?", a:"1. בחירת צורך: בוחרים משימת כתיבה חוזרת ומגדירים מה רוצים לשפר. 2. בניית הסקיל: מנסחים הנחיה, ומוסיפים כלל איכות ודוגמה. 3. שתי הפעלות: בודקים את הסקיל על שני מקרים שונים, ומשפרים לפחות הנחיה אחת. 4. בדיקה ודיוק: בודקים איך הכתיבה השתפרה ואיך התהליך התייעל."},
+   {c:"בניית סקיל", q:"מה נשאר באחריות שלי כשיש סקיל?", a:"זו נקודה מרכזית בסדנה: לפני שבונים סקיל, מחליטים מה עובר לסקיל ומה נשאר באחריותכם. הסקיל שומר על מבנה, טון וכללים, אבל את התוכן, ההתאמה האישית לתלמיד ולמצב, והאחריות על מה שיוצא בשמכם, אתם בודקים ומחליטים."}
+  ]
+ },
+ 8: {
+  recording:"https://drive.google.com/file/d/1jw3HtgTuPvCPJbeYaapzmVrJppyy-xfv/view?usp=sharing",
+  slides:"https://canva.link/g9eskzy6rto82o0",
+  summary:"נעמה הציגה איך יוצרים ב-Google Forms, בעזרת Gemini, טפסים לאיסוף נתונים, סקרים, משובים ובחנים שבודקים את עצמם, בפחות מעשר דקות במקום חצי שעה. בסדנה הודגמו שלוש דרכים: יצירת טופס מהדרייב, יצירת השאלות קודם ב-Gemini ואז העברה ל-Forms (עם יותר שליטה בשאלות), ויצירה ישירות ב-Classroom. בנוסף: מבנה פרומפט לבוחן באזרחות, שיוך לכיתה, פרסום בקישור, ניתוח התשובות ב-Sheets והעברת הציונים.",
+  faq:[
+   {c:"למה טפסים", q:"למה כדאי להשתמש בטופס ולא בדף עבודה?", a:"טופס הוא אינטראקטיבי: אפשר להוסיף תמונות וסרטונים, יש מגוון סוגי שאלות, הבדיקה אוטומטית, ואפשר להגדיר משוב לפי התשובה שהתלמיד בחר. שימושים לדוגמה: רישום לטיול, איסוף נתונים, שאלון היכרות בתחילת שנה, משוב על השתלמות או הרצאה, ובוחן עצמי בסוף כל פרק, שיכול גם להיכנס לציון."},
+   {c:"למה טפסים", q:"מה הבינה המלאכותית מוסיפה?", a:"רעיונות לשאלות, עזרה בניסוח, ובניית הטופס כולו: סוגי שאלות, מפתח תשובות וניקוד. מה שלקח לפחות חצי שעה לוקח היום פחות מעשר דקות. התפקיד שלכם הוא לבקר, לדייק ולאשר את מה שהיא מציעה."},
+   {c:"דרכי יצירה", q:"מה הדרכים ליצור טופס עם Gemini?", a:"שלוש: 1. מהדרייב: בוחרים תיקייה, ״חדש״, Google Forms, ונפתח חלון Gemini שבו כותבים את הפרומפט. 2. דרך Gemini: מבקשים ממנו את השאלות, מייצאים ל-Docs, ואז יוצרים טופס מהקובץ. 3. מ-Classroom: בסביבת הלמידה בוחרים ״יצירה״ ואז ״בוחן״, ונפתח טופס ריק שכבר משויך לכיתה. כל כלי Google מדברים זה עם זה, וכל מה שנוצר נשמר בדרייב."},
+   {c:"דרכי יצירה", q:"מה ההבדל בין יצירה ישירה ב-Forms ליצירה דרך Gemini?", a:"ב-Forms, ״ניסיון חוזר״ מחליף את כל השאלות, גם אלה שאהבתם, ואי אפשר לשוחח על שאלה מסוימת. דרך Gemini יש יותר שליטה: אפשר לבקש ״החלף את שאלה 4״ או ״הוסף שאלה״, ורק כשמרוצים מייצאים ל-Docs (בשלוש הנקודות בסוף השיחה) ויוצרים ממנו טופס. חשוב לכתוב ל-Gemini ״שאלות לא אינטראקטיביות״, אחרת הוא יוצר חידון שעובד רק בתוך הצ׳אט, והמורה לא מקבלת את התוצאות."},
+   {c:"כתיבת הפרומפט", q:"מה כדאי לכתוב בפרומפט לבוחן?", a:"מהניסיון של נעמה: 1. ״צור טופס מסוג בוחן״, כדי שיהיו ניקוד ותשובות. 2. נושא וקהל יעד. 3. מספר שאלות (אחרת הוא יחליט לבד). 4. שאלות סגורות, אם רוצים בדיקה אוטומטית, וסוגיהן: בחירה מרובה, נכון/לא נכון, רשת. 5. רמות חשיבה שונות, גם גבוהות. 6. ״סך הניקוד 100״. 7. שאלות נפרדות לשם פרטי ולשם משפחה. 8. ״התשובה הנכונה לא תמיד תהיה א׳״. 9. הפניה לקובץ שעליו הבוחן מבוסס."},
+   {c:"כתיבת הפרומפט", q:"איך מצרפים קובץ מהדרייב לפרומפט ב-Forms?", a:"אין כפתור פלוס. כותבים @ (שטרודל), כמו כשמתייגים מישהו בקבוצת וואטסאפ, ונפתחת רשימת הקבצים מהדרייב. בוחרים את הקובץ (למשל חוברת או המצגת של הפרק), ו-Gemini מבסס עליו את השאלות. אפשר גם בלי קובץ, למשל ״בוחן על ספר יהושע פרק א׳״, אבל עם קובץ השאלות מדויקות יותר."},
+   {c:"כתיבת הפרומפט", q:"למה לבקש שם פרטי ושם משפחה בשאלות נפרדות?", a:"כדי שבגיליון התשובות אפשר יהיה למיין לפי שם משפחה מא׳ עד ת׳. כך רואים מהר מי לא ענה, ומקלידים את הציונים למערכת הבית ספרית לפי הסדר, בלי לחפש כל תלמיד."},
+   {c:"בדיקה ועריכה", q:"מה צריך לבדוק אחרי ש-Gemini יוצר את הבוחן?", a:"שסך הניקוד באמת 100 (בהדגמה יצא 96, ותיקנו ידנית במפתח התשובות); שהתשובות הנכונות מסומנות; שהתשובה הנכונה לא תמיד במקום הראשון (אפשר לגרור תשובות בעזרת שש הנקודות); לסמן ״חובה״ בכל שאלה; לוודא שלשאלות השם אין ניקוד; ולקרוא את התוכן ואת רמות החשיבה. כשחסרה שאלה, אפשר לבקש ״הצעות נוספות״ ולהוסיף רק את מה שמתאים."},
+   {c:"בדיקה ועריכה", q:"אילו סוגי שאלות נבדקים אוטומטית?", a:"בחירה מרובה, תיבות סימון, רשימה נפתחת, ורשת בחירה מרובה. שאלת רשת היא כמו טבלה: למשל, לכל אירוע בשורה מסמנים איזו זכות נפגעה, כך ששאלת התאמה הופכת לשאלה סגורה. שאלות פתוחות צריך לבדוק ידנית."},
+   {c:"בדיקה ועריכה", q:"מה עוד אפשר להוסיף לטופס?", a:"כותרת ובאנר (למשל באנר שעוצב ב-Canva והועלה כתמונה, והצבעים של הטופס מתאימים את עצמם אליו), תמונות (למשל שקף מהמצגת), סרטון שמסכם את הפרק, מקטעים, וייבוא שאלות מטופס אחר. את התמונות לא Gemini יוצר; מעלים אותן בעצמכם."},
+   {c:"שיוך ופרסום", q:"איך משייכים את הבוחן לכיתה ב-Classroom?", a:"ב-Classroom בוחרים את הכיתה, ״סביבת הלמידה״, ״יצירה״ ואז ״מטלה״, כותבים כותרת, ומצרפים את הטופס מהדרייב. אם יצרתם את הבוחן ישירות מ-Classroom הוא כבר משויך. כדי להשתמש באותו בוחן בכיתה אחרת: ״יצירה״, ״שימוש חוזר בפוסט״. התלמידים רואים רק את השאלות, לא את התשובות, ובסוף מקבלים ציון."},
+   {c:"שיוך ופרסום", q:"איך שולחים טופס בקישור, למשל להורים?", a:"בכפתור ״פרסום״ למעלה. כברירת מחדל, רק משתמשי מחוז דרום יכולים לענות. ב״ניהול״ משאירים את העריכה מוגבלת, ומשנים את המשיבים ל״כל מי שקיבל את הקישור״. אחרי הפרסום מעתיקים את הקישור. כדי לסגור את הטופס אחרי המועד, מסמנים ״לא מקבל תגובות״."},
+   {c:"ניתוח התוצאות", q:"איך רואים את הציונים ומי לא ענה?", a:"בלשונית ״תגובות״ רואים כמה ענו וניתוח לכל שאלה. ב״הצגה ב-Sheets״ נוצר גיליון עם כל תלמיד, הציון מתוך 100 וכל התשובות. ממיינים את עמודת שם המשפחה מא׳ עד ת׳, רואים מי חסר, ומקלידים את הציונים למערכת הבית ספרית."}
+  ]
+ },
+ 20: {
+  recording:"https://drive.google.com/file/d/1AAmpLYz0HLWYTxwRV8zAPFqjZAB4d1Da/view?usp=sharing",
+  summary:"ארבעה רכזי תקשוב מהמחוז הציגו כלים שבנו בעצמם בעזרת בינה מלאכותית, כל אחד מתוך צורך אמיתי בבית הספר: טל מזגאוקר, מערכת לשריון עגלות מחשבים וניהול תקלות; יאזן עוביד זועבי, צ׳אט בסגנון וואטסאפ לתרגול עברית מדוברת בלי פחד; קרן דמאי, לומדה בהיסטוריה שמחזירה את התלמידים לספר ומזהה העתקות; וכאמל אלנבארי, מסך חי במסדרונות עם מערכת שעות, הודעות ואתגר בכל הפסקה.",
+  faq:[
+   {c:"המשותף לכולם", q:"מה המשותף לארבעת הכלים?", a:"כולם התחילו מצורך אמיתי בבית הספר ולא מהטכנולוגיה: שריון מסורבל, תלמידים שמתביישים לדבר, העתקות מהצ׳אט, מידע שמפוזר בין קבוצות וואטסאפ. כולם נבנו בבינה מלאכותית בלי ידע מוקדם בתכנות, שופרו בהדרגה לפי מה שעלה מהשטח, ושמרו על פרטיות: בלי איסוף מידע אישי על תלמידים, ובכלים שמשרד החינוך אישר כשתלמידים משתמשים בהם."},
+   {c:"טל מזגאוקר: שריון מחשבים", q:"איזו בעיה פתרה מערכת שריון המחשבים?", a:"השריון התנהל בגיליון Google Sheets: כל שבוע הרכזת בנתה אותו מחדש, היו דריסות ושריונים כפולים, ולא הייתה דרך מסודרת לעקוב אחרי תקלות ומחשבים שלא הוחזרו. האפליקציה מרכזת הכול במקום אחד: לוח שבועי של שתי עגלות (צעירים ובוגרים, בצבעים שתואמים את המדבקות על המחשבים), הזמנה עם בדיקת זמינות, הזמנה חוזרת לשיעורים קבועים, ודיווח תקלות עם מספר המחשב, דחיפות ואפשרות לצרף תמונה."},
+   {c:"טל מזגאוקר: שריון מחשבים", q:"מה יש בממשק הניהול?", a:"ממשק מוגן בסיסמה לרכזת ולמזכירות: לוח בקרה (הזמנות פעילות, תקלות פתוחות, מחשבים זמינים), סימון תקלה כ״בטיפול״ או ״טופל״, ייצוא כל התקלות לקובץ Excel לטכנאי, וחסימת שעות לפעילויות מיוחדות. כלל שנוסף מהשטח: ההזמנה לשבוע הבא נפתחת רק ביום חמישי בבוקר, כדי שלא ישריינו מראש את כל הזמן."},
+   {c:"טל מזגאוקר: שריון מחשבים", q:"באיזה כלי היא נבנתה, וזה מותר?", a:"בפלטפורמה Base44, שעובדת בדפדפן וגם בגרסה החינמית שלה (עם מכסת קרדיטים מוגבלת; כשנגמרו, טל חיכתה לחידוש והמשיכה). הפרומפט הראשון היה ארוך ומפורט, ואחר כך תוקנה בהדרגה. לפי טל, זה בסדר כי הכלי משרת את המורים בלבד, ואין בו מידע על תלמידים. כשתלמידים משתמשים בכלי, צריך לבחור בפלטפורמות שמשרד החינוך אישר. אפשר לבנות כלים כאלה גם עם Gemini."},
+   {c:"יאזן עוביד זועבי: תרגול עברית", q:"מה זה ״הוואטסאפ של נבין״?", a:"צ׳אט בסגנון וואטסאפ שבו תלמידים דוברי ערבית מתרגלים עברית מדוברת עם דמות בשם נבין, בקצב אישי ובלי קהל. התלמיד כותב או מדבר, הדמות עונה בעברית פשוטה, מבקשת הבהרה כשצריך, ויש השמעה קולית ותרגום לערבית. הרעיון נולד מתלמידים שיודעים את התשובה אבל לא עונים בכיתה מפחד שיצחקו עליהם."},
+   {c:"יאזן עוביד זועבי: תרגול עברית", q:"מה ראו אצל התלמידים, ואיך הם נכנסים?", a:"בפיילוט קטן עם שישה תלמידים בכיתה ו׳, התלמידים כתבו ודיברו יותר, ובעיקר גדלו הביטחון וההשתתפות. יאזן הדגיש שזו תצפית ולא הוכחה, כי מדובר במספר קטן. כיוון שלתלמידים אין הרשאה לפלטפורמה שבה הכלי נבנה, יאזן הטמיע אותו באתר Google Sites עם הסבר קצר, ומשם התלמידים נכנסים בלחיצה. הרעיון מתאים גם לתרגול אנגלית או ערבית מדוברת."},
+   {c:"קרן דמאי: לומדה בהיסטוריה", q:"מה זה ״מסע בזמן 1880״?", a:"לומדה בהיסטוריה לכיתה ט׳ על האימפריאליזם, עם ארבע תחנות ומיומנות שונה בכל תחנה: שאלות אמריקאיות, מפה אינטראקטיבית, מיון היבטים, ניתוח מקור, כתיבת ״ציוץ״ מ-1880 שמביע עמדה, וסרטון. כל שאלה מפנה לעמוד בספר הלימוד, כך שהתלמידים חייבים לעבוד עם הספר. בשאלות פתוחות יש מינימום תווים, ואחרי אישור תשובה אי אפשר לחזור."},
+   {c:"קרן דמאי: לומדה בהיסטוריה", q:"איך הלומדה מתמודדת עם העתקות מהצ׳אט?", a:"אי אפשר להעתיק ממנה טקסט, וכל יציאה מהלומדה נרשמת ונשלחת למורה (אפשר גם לחסום). בסוף, הבינה המלאכותית מנתחת את התשובות ומסמנת תשובות שנראות כתובות בעזרת בינה מלאכותית או זהות בין תלמידים. קרן שלחה לשכבה סיכום של כמות היציאות, בלי שמות, וזה לבד שינה את ההתנהגות."},
+   {c:"קרן דמאי: לומדה בהיסטוריה", q:"מה המורה מקבלת בסוף?", a:"משוב אוטומטי לכל תלמיד על כל שאלה, שמתפרסם כשהמורה מחליטה (וקרן עוברת עליו ובודקת, ולא מסתמכת עליו לגמרי), וייצוא לטבלת Excel. עם בינה מלאכותית היא בונה מיפוי כיתתי של מי צריך חיזוק בניתוח מקור, בהבעת עמדה או בהבנת הנקרא, ומשם קבוצות ללמידה דיפרנציאלית. הלומדה נבנתה בפלטפורמה ייעודית, ובגלל שהיא מבוססת קוד, קרן העבירה אותה בקלות ל-Claude Code כשהפלטפורמה לא עבדה."},
+   {c:"כאמל אלנבארי: מסך חי", q:"מה מציג המסך החי במסדרונות?", a:"מסך שמשתנה לבד לפי שעות היום: בבוקר ברכה, ספירה לאחור לשיעור הראשון, פתרון האתגר של אתמול וימי הולדת. בזמן שיעורים, מערכת השעות של כל הכיתות, מורים חסרים (באדום), מורים פנויים ותורנויות. בהפסקה, שאלת אתגר עם ארבע תשובות וקוד QR. בנוסף: הודעות בית הספר, אירועים, ״כיתת השבוע״ ועבודות תלמידים. מנהל או סגן יכולים לשלוח הודעת חירום שמופיעה בכל המסכים תוך כ-10 שניות."},
+   {c:"כאמל אלנבארי: מסך חי", q:"איך עובד אתגר ההפסקה?", a:"תלמידים סורקים את קוד ה-QR ועונים, בלי אפליקציה, בלי שם משתמש ובלי שמות, רק בחירת כיתה. בהפסקה הבאה מוצגים הפתרון, ההסבר ואחוז העונים נכון בבית הספר, כך שגם מי שטעה לומד. בלוח הבקרה המורים רואים אילו תשובות שגויות היו נפוצות, ודנים בהן בשיעור למחרת. כאמל: ״הטעות של היום היא השיעור של מחר״."},
+   {c:"כאמל אלנבארי: מסך חי", q:"מי מעלה תוכן למסך, ואיך שומרים על בקרה?", a:"תלמידים מעלים אתגרים ועבודות עם מקור, מקצוע ומיומנויות, ומצהירים אם השתמשו בבינה מלאכותית ובאיזה כלי. מחנכים מעלים הודעות עם קוד, ומורים מעלים כלים שיצרו (מוצגים כקוד QR). שום דבר לא עולה למסך לפני שהרכז מאשר. במסך יש גם מחולל פרומפטים למורים ולתלמידים, ורשימת כלים מאושרים בלבד. הנתונים מהמערכת הבית ספרית נמשכים דרך RSS. כאמל בנה את המערכת עם Claude Code."}
+  ]
+ },
+ 10: {
+  recording:"https://drive.google.com/file/d/1hoR_S6SbjI-Ba6rnJp1WZvFHfHRdFIwg/view?usp=drivesdk",
+  slides:"https://canva.link/ladhllwxkw1z8ck",
+  summary:"ליאת, מורה ומחנכת לילדים על הרצף, הציגה איך כותבים סיפורים חברתיים מאוירים בעזרת Gemini Storybook בחשבון הארגוני: ששת הרכיבים של פרומפט טוב, הדגמה חיה של סיפור לילדה שמתקשה ברעש בהפסקה, תיקון טעויות בסיפור, ודרכים להפוך את הסיפור לספרון מודפס, לספר מדפדף ב-Canva עם הקראה בקול של המורה, או לחומר לימוד ב-Classroom.",
+  faq:[
+   {c:"היכרות", q:"מה זה סיפור חברתי?", a:"כלי הוראה מוכר, בעיקר בחינוך המיוחד, שפותח על ידי ד״ר קרול גריי ב-1991. משתמשים בו כדי לעזור לתלמידים לווסת רגשות, למצוא פתרונות לבעיות, ולהתמודד עם מצבים חדשים או עם שינויים בחיים."},
+   {c:"היכרות", q:"מה הבינה המלאכותית מוסיפה ביצירת סיפור חברתי?", a:"היא עוזרת לפתח ולדייק רעיון, יוצרת איורים אחידים ונעימים בלי חשש לזכויות יוצרים ובדיוק לסיטואציה שרוצים, מאפשרת הקראה, ומייצרת סיפור תוך דקות, עם אפשרות לתקן. אבל הבינה האנושית נשארת במרכז: אתם מכירים את הילד ואת הצרכים שלו, והבינה המלאכותית עוזרת ליישם."},
+   {c:"היכרות", q:"איך נכנסים ל-Gemini Storybook?", a:"נכנסים ל-Gemini בחשבון הארגוני (דרך תשע הנקודות של Google או דרך בית הספר הווירטואלי). בצד, לוחצים על גלגל השיניים (הגדרות), בוחרים Gems, ושם בוחרים Storybook. הכלי חינמי בחשבון הארגוני. אפשר גם להשתמש באפליקציית Gemini בטלפון, בתנאי שנכנסים עם החשבון הארגוני."},
+   {c:"היכרות", q:"איך מחברים את החשבון הארגוני בקלות?", a:"ב-Gmail הרגיל בוחרים ״הוספת חשבון״, וכותבים את הכתובת הארגונית (המספרית) עם הסיומת של משרד החינוך. זה מעביר להזדהות האחידה של משרד החינוך, ואחריה נכנסים לחשבון הארגוני. חשוב לעבוד בחשבון הארגוני לכל עבודה של בית הספר."},
+   {c:"כתיבת הפרומפט", q:"מה צריך לכתוב בפרומפט לסיפור חברתי?", a:"שישה רכיבים: 1. פרטי רקע על הילד: גיל, שם פרטי או בדוי, רמה שפתית ורמת תפקוד. 2. הערך והמסר: מה רוצים ללמד, ואילו דרכי התמודדות הילד יכול לבחור. 3. סגנון האיור: אנימציה, ריאליסטי, צבעי פסטל או צבעי מים. 4. התאמות ייחודיות: מגזר, מגדר, שמות, גיל. 5. שפה ורמה שפתית: משפטים קצרים או טקסט ארוך, ספרון דו-לשוני. 6. מספר עמודים: עד 10 עמודים."},
+   {c:"כתיבת הפרומפט", q:"יש דוגמה לפרומפט?", a:"מהסדנה: ״צור סטוריבוק בעברית על ילדה בת שבע בשם נועה, על הפסקה רועשת בבית הספר. מה אפשר לעשות כשרועש: לבקש עזרה ממבוגר, למצוא פינה שקטה, לקרוא ולצייר לבד, לשחק משחק רגוע עם חברה, או לשים אוזניות. כתוב במשפטים קצרים וברורים, בטון רגוע ומתאר ולא בטון מצווה. כ-10 עמודים, בסגנון איור של אנימציה עדינה בצבעים רגועים.״ טיפ: אפשר לכתוב טיוטה, לבקש מ-Gemini הרגיל לדייק אותה, ורק אז להדביק ב-Storybook. ליאת שיתפה בסדנה גם תבנית פרומפט למילוי."},
+   {c:"כתיבת הפרומפט", q:"אילו פרטים על התלמיד מותר לכתוב?", a:"גיל, תיאור כללי של הקושי, רמה שפתית ותפקודית, ושם פרטי בלבד או שם בדוי. אסור: שם משפחה, פרטים מזהים או תמונה של התלמיד."},
+   {c:"עריכה ותיקון", q:"יש טעות בסיפור. מה עושים?", a:"כותבים ל-Storybook מה לתקן ובאיזה עמוד, למשל ״בעמוד 2 כתוב על אריה אבל המילה לא מופיעה״ או ״בעמוד 6 כתוב עופות במקום עפות״. הוא יוצר גרסה מתוקנת בלי לשנות הרבה את המבנה. אפשר גם לבקש ניקוד."},
+   {c:"שימוש בסיפור", q:"אפשר להוריד את הסיפור עם ההקראה?", a:"לא. בכלי יש הקראה מובנית (רובוטית), אבל הורדה היא רק כקובץ PDF, בלי שמע. הפתרון שליאת ממליצה עליו: להעלות את ה-PDF ל-Canva ולהקליט את הסיפור בקול שלכם, כך שהתלמיד שומע הקראה נכונה וטבעית."},
+   {c:"שימוש בסיפור", q:"איך מקליטים את עצמי מקריאה את הסיפור ב-Canva?", a:"בדף הבית של Canva בוחרים ״העלאה״ ומעלים את קובץ ה-PDF. הקובץ נפתח לעריכה. אחר כך לוחצים ״שתף״, יורדים ובוחרים ״הצג והקלט״. נפתח אולפן ההקלטות של Canva, שמקליט את הקול שלכם וגם מצלם אתכם בעיגול קטן בזמן הקריאה."},
+   {c:"שימוש בסיפור", q:"איך הופכים את הסיפור לספר מדפדף?", a:"ב-Canva, דרך ״שתף״ ומשם לאפליקציות, בוחרים באפליקציה Heyzine, שהופכת עיצוב לספר דיגיטלי מדפדף. בוחרים את כל הדפים ואת התצוגה כמגזין, ומפרסמים. מתקבל קישור שאפשר לשלוח לתלמיד או להעלות ל-Classroom, ובו אפשר לדפדף, להגדיל, להדפיס ולהוריד."},
+   {c:"שימוש בסיפור", q:"מה עוד אפשר לעשות עם הסיפור?", a:"להוריד כ-PDF ולהדפיס ספרון פיזי (גם לנלמן); להעלות ל-Classroom כמטלה או כחומר לימוד; להעלות את ה-PDF ל-Gemini ולבקש דף עבודה על הסיפור; ולהשתמש בספרון הדיגיטלי בתוך הכלי. מעבר לסיפור חברתי, אפשר ליצור ספרונים לעידוד קריאה, ספרוני אוצר מילים דו-לשוניים, וסיפורים היסטוריים כמו סיפור חנוכה."},
+   {c:"שימוש בסיפור", q:"תלמידים יכולים להשתמש ב-Storybook בעצמם?", a:"לא. לפי מה שנאמר בסדנה, הכלי מיועד לעבודת המורים ואינו מאושר לשימוש חופשי של תלמידים. המורה יוצרת את הסיפור ומעבירה לתלמיד את התוצר."}
+  ]
+ },
+ 11: {
+  recording:"https://drive.google.com/file/d/1909dFu2t0T0c3IkkbO8SIghoehcnW_pK/view?usp=sharing",
+  slides:"https://canva.link/rgim27odls4v3jt",
+  summary:"״מהצורך לתמונה, מהתמונה למשמעות״: הפרומפט כבר לא במרכז, אלא התכנון והצורך הפדגוגי. יעלה הציגה סוגי תמונות לפי מטרה (המשגה, מדרש תמונה, קומיקס, אינפוגרפיקה), והדגימה ב-Gemini וב-ChatGPT תהליך מלא סביב חנוכה: שיחה עם המודל על הצורך, פרומפט שהמודל כותב, מדרש תמונה לפתיחת שיעור, אותה תמונה עם הסברים, כרטיס משימה, עריכה נקודתית, וספרון מאויר לראשית קריאה.",
+  faq:[
+   {c:"מתחילים מהצורך", q:"מאיפה מתחילים כשרוצים ליצור תמונה לשיעור?", a:"מהצורך הפדגוגי, לא מהפרומפט. שואלים: מה אני רוצה שהתמונה תעשה עבור הלומדים? למשל לעורר סקרנות, להמחיש, להמשיג רעיון מופשט, לעודד דיון, לעורר רגש, להסביר, או לסייע בזכירה ובהפנמה. תמונה בשיעור לא נועדה רק כדי שהשקף ייראה יפה יותר."},
+   {c:"מתחילים מהצורך", q:"למה חשוב לדעת איפה בשיעור התמונה תשתלב?", a:"כי זה משפיע על סוג התמונה: תמונה שמעוררת סקרנות מתאימה לפתיחה, ותמונה שמסבירה מתאימה כעוגן במהלך השיעור או ככרטיס ניווט לעבודה עצמית. וגם טיפ טכני: כשמספרים למודל איפה התמונה תוצג (מצגת או וואטסאפ), הוא מתאים את היחס: לרוחב למצגת, ריבועית לוואטסאפ."},
+   {c:"מתחילים מהצורך", q:"אילו סוגי תמונות יש, ולמה כל אחד מתאים?", a:"תמונה להמשגה: נותנת צורה חזותית לרעיון מופשט (למשל פוטוסינתזה). מדרש תמונה: תמונה עם רמזים שמעוררת התבוננות, שאלות, פרשנות ודיון. קומיקס: מספר רצף של אירועים, עלילה, דיאלוג או תהליך. אינפוגרפיקה: הופכת מידע כתוב למבנה חזותי ברור ומסודר. בוחרים את הסוג לפי המטרה הפדגוגית."},
+   {c:"יצירה בשיחה", q:"למה עדיף ליצור תמונה במודל שפה ולא במחולל תמונות?", a:"פעם היה צריך מחוללי תמונות ייעודיים (כמו Midjourney או Leonardo) ופרומפט מדויק עם מונחים מקצועיים כמו עדשות וקומפוזיציה. היום Gemini ו-ChatGPT הם מולטימודליים: מתארים בשפה טבעית מי אתם, מי התלמידים, מה הנושא ומה המטרה, והמודל כותב לעצמו את הפרומפט. וגם אפשר לערוך תמונה קיימת, ולא רק ליצור חדשה."},
+   {c:"יצירה בשיחה", q:"איך נראה פרומפט טוב ליצירת תמונה?", a:"מתארים את ההקשר ולא את התמונה. למשל: ״אני מורה לתלמידי כיתה א׳ ומלמדת על חג חנוכה. בפתיחת השיעור אני רוצה להציג במצגת תמונה שתעורר את סקרנות התלמידים, בסגנון מדרש תמונה, עם רמזים שקשורים לאור ולגבורה, כחידה שבה התלמידים יגלו את נושא השיעור.״"},
+   {c:"יצירה בשיחה", q:"עדיף לבקש תמונה ישר, או קודם תיאור?", a:"כדאי לבקש קודם: ״כתוב לי פרומפט בעברית שמתאר את התמונה שעליי ליצור״. מקבלים תיאור מילולי עם מונחים חזותיים מדויקים והסבר על הרמזים, ואפשר לדייק אותו לפני היצירה (למשל ״רמזים פחות ברורים״). לדייק לפני היצירה מדויק יותר מלערוך אחרי, כי עריכת תמונה מוגמרת מוגבלת יותר. כשהתיאור טוב, כותבים ״מעולה, עבור ליצירת התמונה לפי הפרומפט שכתבת״."},
+   {c:"יצירה בשיחה", q:"באיזה כלי כדאי להשתמש?", a:"Gemini בחשבון הארגוני: רישוי מורחב עם יותר תמונות, זמין דרך בית הספר הווירטואלי, ופתוח גם לתלמידים מכיתה ז׳. ב-Gemini יעלה מעדיפה את מודל Pro ליצירת תמונות. ל-ChatGPT יש מודל תמונות מתקדם מאוד, ואפשר להעתיק את אותו פרומפט לשניהם ולבחור את התוצאה הטובה. כשהתלמיד מקבל רק את התמונה המוגמרת, אפשר להשתמש בכל כלי. כשתלמידים יוצרים בעצמם, רק Gemini."},
+   {c:"מתמונה אחת לשימושים רבים", q:"איך הופכים תמונה אחת לכמה שלבים בשיעור?", a:"ממשיכים באותה שיחה ומתארים את השלב הבא. בסדנה: אחרי מדרש התמונה, ״הצג את אותה תמונה בדיוק עם מידע כתוב ליד כל רמז״. אחר כך: ״צור כרטיס משימה שמבוסס על האלמנטים בתמונה, עם תמונות האלמנטים, שבו כל תלמיד בוחר אלמנט אחד וכותב עליו פסקה״. כרטיס משימה מעוצב כזה הוא תמונה, לא קובץ Docs."},
+   {c:"עריכה", q:"איך עורכים רק חלק מהתמונה?", a:"ב-Gemini לוחצים על התמונה, ונפתח סרגל עיצוב. מסמנים בצבע את האזור שרוצים לשנות, שומרים, וכותבים מה לשנות (למשל ״החרב חתוכה, צור אותה מחדש בתוך האזור המסומן״). המודל משנה רק את האזור הזה ולא יוצר תמונה חדשה. זה גם הדרך לערוך תמונה ישנה בשיחה: בלי סימון, Gemini תמיד עורך את התמונה האחרונה."},
+   {c:"עריכה", q:"Gemini כותב עברית שגויה בתמונה. מה עושים?", a:"לוחצים על התמונה, בוחרים ״טקסט״ וכותבים בעצמכם את הכיתוב הנכון במקום הרצוי. שומרים ומבקשים רק עיצוב, למשל ״הפוך את הכיתוב האדום לסגנון כתב בלון״. המודל משמר את הטקסט שכתבתם ומשנה רק את העיצוב."},
+   {c:"עריכה", q:"אפשר להשתמש בתמונה קיימת?", a:"כן, בשתי דרכים: כהשראה (״על בסיס התמונה הזו צור תמונה לחג פורים״) או לעריכה ישירה (״ערוך את התמונה הזו כך שתתאים לספר ילדים מאויר וצבעוני לגיל 7״). לא צריך להסביר איך נראה ספר ילדים, המודל מבין. אבל: אסור להעלות תמונות של תלמידים או תמונות פנים."},
+   {c:"רצף תמונות", q:"איך יוצרים ספרון או סדרת כרטיסיות עם דמות עקבית?", a:"לא מבקשים את כל התמונות בבת אחת, כי אז המודל יוצר תמונה אחת מחולקת לחלקים. קודם מבקשים תכנון: ״כתוב לי תיאור של כל תמונה ושל המלל בספרון של 4 עמודים על החורף לראשית קריאה״. המודל מגדיר סגנון אחיד לכל האיורים. אחר כך באותה שיחה: ״צור את התמונה הראשונה לפי התיאור״, ואז השנייה, וכן הלאה. כך הדמויות, הסגנון והגופן נשמרים. בסוף מורידים ומאגדים במצגת, ב-Canva או בכל כלי אחר."},
+   {c:"רצף תמונות", q:"איך מקבלים ניקוד נכון בתמונה?", a:"מבקשים מהמודל קודם לכתוב את הטקסט המנוקד בשיחה, בודקים אותו, ורק אחר כך מבקשים ליצור את התמונה, כך שהוא מעתיק את מה שכבר כתב. אם מבקשים ישר תמונה עם טקסט מנוקד, כמעט בטוח יהיו טעויות בניקוד."}
+  ]
+ },
+ 25: {
+  recording:"https://drive.google.com/file/d/1c-nbzl1ZO3OzVoYSdQppCwL6Wa0i08d8/view?usp=sharing",
+  slides:"https://claude.ai/artifact/QjNZYLLxbJmUUNZv3r76dS",
+  summary:"סדנה בפורמט ״מעבדה חיה״: במקום רשימת איסורים, יעלה הדגימה ב-Gemini מה קורה כשמשתמשים בבינה מלאכותית בצורה לא אתית ואיך עושים את זה נכון. הסדנה בנויה סביב חמישה עקרונות: פרטיות, אמינות, הוגנות, שיקול דעת ואחריות. בסופה תרגיל ״רמזור״ על תרחישים מבית הספר, וסקירה של הנחיות משרד החינוך לפי שכבות גיל.",
+  faq:[
+   {c:"פרטיות", q:"אילו פרטים אסור להכניס לפרומפט?", a:"פרטים מזהים ופרטים רגישים. בדוגמה מהסדנה, פרומפט למכתב להורים הכיל תשעה כאלה: שם התלמידה, כיתה, בית ספר, עיר, אבחנה רפואית, ציון, שם ההורה, טלפון והערכה אישית על ההורה. אפשר לכתוב את אותו מכתב בלי אף אחד מהם, למשל: ״כתוב מכתב קצר להורים של תלמידה בכיתה א׳ על ירידה בהישגים במתמטיקה, בטון מכיל ולא מאשים, הדגש חוזקות, השאר מקום לשם ולתאריך״. בהדגמה התוצאה הייתה טובה באותה מידה."},
+   {c:"פרטיות", q:"מה זו ״בדיקת שלוש השניות״?", a:"בדיקה קצרה לפני כל שליחת פרומפט: 1. פרטים מזהים: שם, תעודת זהות, תמונה או טלפון? 2. מידע רגיש: ציון, מצב משפחתי, משמעת? 3. מבחן אתי: אם הפרומפט היה נשלח בטעות לקבוצת ההורים בוואטסאפ, הייתי מרגישה בנוח? הטריק: להחליף פרטים מזהים ב״תלמיד א׳״ או ״תלמיד ב׳״, ולהשלים את השם בעצמכם אחרי ההעתקה."},
+   {c:"פרטיות", q:"Gemini הארגוני מזהה פרטים מזהים בעצמו. אז זה בסדר?", a:"לא. בהדגמה Gemini הארגוני אכן זיהה את הפרטים המזהים, וזה טוב, אבל זה עדיין לא בסדר להכניס אותם מלכתחילה. האחריות על מה שנשלח היא של המשתמש."},
+   {c:"אמינות", q:"אפשר לסמוך על מחקרים, ציטוטים וקישורים שהצ׳אט נותן?", a:"לא בלי בדיקה. גם כשמבקשים מקורות מדויקים, ציטוט מחוזר מנכ״ל או קישורים, הצ׳אט עלול להמציא, ואי אפשר לדעת מאיפה הוא לקח את המידע. ניסוח בטוח או הבטחה של הצ׳אט הם לא מקור. הכלל: כל עובדה, ציטוט וקישור עוברים אימות ידני שלכם."},
+   {c:"אמינות", q:"אז איך משתמשים בבינה מלאכותית למשימות שדורשות מקורות?", a:"שתי דרכים: 1. לא להעתיק את התשובה כמו שהיא, אלא להיכנס לכל הפניה ולבדוק שהמקור קיים ושהציטוט מדויק. 2. לחפש בעצמכם מקורות אמינים (למשל ב-Google Scholar), לתת אותם לצ׳אט, ורק אז לבקש את המשימה. כלי בטוח יותר למשימות כאלה הוא Gemini Notebook (NotebookLM), שעונה בעיקר מתוך המקורות שהעליתם, אבל גם שם צריך לבדוק."},
+   {c:"הוגנות", q:"איך בינה מלאכותית יוצרת הטיות?", a:"היא משקפת את הסטריאוטיפים של החברה. בהדגמה: ״מנהל בית ספר מצליח״ הניב גבר מבוגר בחולצה מכופתרת, ״גננת״ הניבה אישה בטי-שירט, ובבקשה למורה לכימיה ולמורה לספרות, הכימיה קיבלה גבר והספרות אישה. גם באנגלית, שבה אין הטיה מגדרית בשפה, התוצאות היו סטריאוטיפיות. בעברית צריך לשים לב גם לניסוח הבקשה עצמה, כי השפה מגדרית."},
+   {c:"הוגנות", q:"איך מבקשים תוצרים הוגנים?", a:"מבקשים גיוון במפורש: כמה תמונות של אנשים, בלי להגדיר גבר או אישה, עם גיוון בגיל, במגדר, במוצא ובסגנון הלבוש, ומכל החברות בישראל (ערבית, בדואית, דתית, חרדית ועוד). אותו דבר בטקסטים: לא תמיד ״התלמיד המצטיין״ ו״התלמידה המתקשה״. הכלל: לבקש גיוון, לבדוק מי מיוצג, ובעיקר לא לשכוח מי חסר."},
+   {c:"שיקול דעת", q:"למה הצ׳אט מסכים איתי כמעט תמיד?", a:"מודלי שפה נוטים לרצות ולהחמיא, בעיקר כשהם מזהים בפרומפט מה דעתכם. בהדגמה, מערך שיעור חלש במיוחד, עם המשפט ״אני חושבת שהמערך הזה מצוין״, קיבל שבחים. אחרי ״המפקחת אמרה שהמערך חלש״, הצ׳אט התהפך והסכים עם המפקחת. הוא מהדהד את מה שכתבתם, ולא בהכרח נותן הערכה אמיתית."},
+   {c:"שיקול דעת", q:"איך מקבלים ביקורת אמיתית מהצ׳אט?", a:"לא חושפים את דעתכם ולא מספרים שאתם כתבתם. נותנים לו פרסונה מקצועית ובקשה ממוקדת, למשל: ״קרא את מערך השיעור הבא, ציין שלוש חולשות מרכזיות, לכל אחת הסבר קצר והצעה מעשית, ואל תתחיל במחמאות״. בהדגמה, אותו מערך קיבל כך ביקורת עניינית: המורה במרכז והתלמידים פסיביים."},
+   {c:"אחריות", q:"מה היו התשובות בתרגיל הרמזור?", a:"אדום (אסור): להעלות קובץ אקסל עם שמות וציונים של הכיתה (במקום זה מוחקים את עמודת השמות ומחליפים במספרים), ולהעלות תמונה של תלמידה כדי להפוך אותה לדמות מצוירת (במקום זה מתארים דמות כללית). צהוב (מותר בתנאים): הערכות מילוליות לתעודה (מבנה וניסוחים בלי שמות, ותמיד התאמה אישית של המורה), מייל על אירוע משמעתי (תיאור כללי בלי שמות, ובדיקת הטון), ומתן ציון לחיבורים (אפשר להיעזר במשוב לפי מחוון, בלי שמות, אבל הציון נשאר החלטה של המורה). ירוק: דף עבודה בשלוש רמות קושי על שברים, כמובן אחרי בדיקת התוכן."},
+   {c:"אחריות", q:"מותר לתלמיד יסודי להשתמש ב-ChatGPT לשיעורי בית?", a:"לא. לפי מה שהוצג בסדנה, שימוש ב-ChatGPT מתחת לגיל 13 אסור גם לפי תנאי השימוש של OpenAI, ולפי הנחיות משרד החינוך בכיתות ד׳ עד ו׳ מותר רק הבוט החינוכי של המשרד ובהנחיית מורה. מה המורה יכולה לעשות: לדבר על זה בכיתה, לשתף את ההורים, ולבנות משימות שבודקות את התהליך ולא רק את התוצר."},
+   {c:"אחריות", q:"מה מותר לתלמידים לפי שכבת גיל?", a:"לפי הנחיות משרד החינוך: א׳ עד ג׳: אין שימוש של תלמידים בכלי בינה מלאכותית יוצרת, אבל מעודדים שיח על הטכנולוגיה. ד׳: הבוט החינוכי של משרד החינוך בלבד, ובפיקוח מורה. ה׳ עד ו׳: כלים ייעודיים בשליטת המורה או הבוט החינוכי של המשרד. מכיתה ז׳: שימוש עצמאי בכלים מאושרים מהקטלוג, לפי הגבלת הגיל של כל כלי. מכיתה ד׳ נדרשים אישור הורים וחלופה למי שלא משתמש. ותמיד: שיקול דעת אנושי ושמירה על פרטיות. ההנחיות המלאות נמצאות במצגת הסדנה."},
+   {c:"אחריות", q:"מה המשותף לכל המקרים האסורים?", a:"פרטיות, הוגנות ואחריות. ומכאן העיקרון החמישי: ציון, הערכה, מייל או דוח יוצאים בשמכם, ולכן האחריות עליהם נשארת אצלכם ולא אצל הבינה המלאכותית."}
+  ]
+ },
+ 15: {
+  recording:"https://drive.google.com/file/d/1bs0EcPo9KK4pPPV4waLrLDcLrEybvjiM/view?usp=sharing",
+  gallery:Array.from({length:9},(_,i)=>`slides/yael/s-${i+1}.jpg`),
+  summary:"יעל הציגה את Gemini שבתוך Google Classroom, עוזר שנבנה במיוחד לעבודת המורה. ממלאים טופס קצר (כיתה, נושא, מטרה, או חומר שכבר נמצא בכיתה), ו-Gemini כותב לבד את הפרומפט ומפיק את התוצר. בסדנה נוצרו מערך שיעור על מחזור המים לכיתה ב׳, מצגת על התפרצות הרי געש לכיתה ח׳ שהועלתה לכיתה כחומר לימוד, תמונה מסבירה, לוח בחירה של 9 משימות, וסקירה של ארבע קבוצות הכלים. בסוף הוצג גם כלי החלוקה לקבוצות בקלמר של בית הספר הווירטואלי.",
+  faq:[
+   {c:"היכרות", q:"מה מיוחד ב-Gemini שבתוך Classroom?", a:"זה לא עוד צ׳אטבוט כללי, אלא כלי שנבנה לעבודת המורה ויושב בתוך Classroom, שבו המורים כבר עובדים. המידע מוגן ולא משמש לאימון מודלים. היתרון הגדול: לא צריך לכתוב פרומפט. ממלאים טופס קצר, ו-Gemini כותב לבד פרומפט מפורט ומפיק את התוצר. אם כבר יש חומרים בכיתה, אפשר לבסס עליהם את התוצר בלי להעלות שוב."},
+   {c:"היכרות", q:"איך נכנסים?", a:"נכנסים לבית הספר הווירטואלי ומזדהים, ובכלים השימושיים בוחרים Classroom. בדף הבית של Classroom לוחצים על שלושת הקווים בפינה, ושם מופיע Gemini. חשוב להיכנס דרך בית הספר הווירטואלי, כלומר דרך החשבון הארגוני. מי שנכנס בדרך אחרת עלול לא לראות את Gemini בכלל."},
+   {c:"היכרות", q:"אילו כלים יש שם?", a:"בראש הדף יש שלושה כלים פופולריים: יצירת ראשי פרקים למערך שיעור, יצירת מצגת ויצירת תמונות. מתחתם ארבע קבוצות: כלי תכנון (סיעור מוחות לפרויקטים, שאלות לפתיחת דיון, יצירת גירוי לשיעור), חומרי הוראה (טקסט אינפורמטיבי, אוצר מילים, דוגמאות מהחיים, שקפים אינטראקטיביים, תרגום ועוד), בחינות ולוח בחירה (בוחן, קריטריונים להערכה, לוח בחירה), ותמיכה בתלמידים. הכלים משתנים ומתעדכנים לעיתים קרובות."},
+   {c:"היכרות", q:"יש שני כפתורים בכל כלי. מה ההבדל ביניהם?", a:"באחד מוסיפים חומר שכבר נמצא באחת הכיתות שלכם ב-Classroom (למשל קובץ על מחזור המים), ו-Gemini מבסס עליו את התוצר. בשני מתחילים מאפס: כותבים את שכבת הגיל, הנושא ומה רוצים, ואפשר גם להעלות קובץ מהדרייב."},
+   {c:"מערכי שיעור ומצגות", q:"איך יוצרים מערך שיעור?", a:"בוחרים ״יצירת ראשי פרקים״, בוחרים כיתה וחומר מהכיתה (או מתארים מאפס), כותבים את שכבת הגיל ומה רוצים שהתלמידים יכירו, ולוחצים על יצירה. מתקבלים ראשי פרקים שאפשר לערוך, ליצור מחדש או לייצא ל-Docs. בלחיצה על ״צור מערך שיעור מלא ב-Gemini״ עוברים ל-Gemini, שכותב פרומפט מפורט לבד ומפיק מערך מלא: מטרות למידה, חימום, פעילויות, ואפילו תפיסות שגויות נפוצות ואיך להתמודד איתן."},
+   {c:"מערכי שיעור ומצגות", q:"איך יוצרים מצגת ומעלים אותה לתלמידים?", a:"1. בוחרים ״יצירת מצגת״, ממלאים שכבת גיל ויעד למידה. 2. Gemini מפיק מצגת, ואפשר לערוך אותה לפני הייצוא. 3. מייצאים ל-Google Slides. 4. בהגדרות השיתוף משנים את הגישה ל״כל מי שקיבל את הקישור יכול לצפות״, כדי שהתלמידים יוכלו לפתוח, ומעתיקים את הקישור. 5. ב-Classroom נכנסים לכיתה, לסביבת הלמידה, ובוחרים ״יצירה״ ואז ״חומר לימוד״. 6. נותנים כותרת, מדביקים את הקישור, משייכים לנושא ומפרסמים."},
+   {c:"מערכי שיעור ומצגות", q:"צריך להעלות את מערך השיעור לתלמידים?", a:"לא. לפי יעל, אין טעם שהתלמידים יראו את מהלך השיעור. עדיף להוריד אותו כ-PDF או לייצא ל-Docs ולשמור אצלכם. גם אם לא הורדתם, הוא נשמר כשיחה ב-Gemini."},
+   {c:"עוד כלים", q:"אילו סוגי תמונות אפשר ליצור?", a:"למשל תמונה לפתיחת דיון עם נקודות מרכזיות לשיחה, קומיקס (מתאים במיוחד לכיתות הנמוכות, למשל סיפור חנוכה), אינפוגרפיקה, והמחשה של רעיון (בסדנה: המפץ הגדול לכיתה י״א). רעיון לשילוב: ליצור אינפוגרפיקה ואז לבקש דף עבודה שבו התלמידים מחלצים ממנה מידע, ולהעלות את שניהם כמטלה."},
+   {c:"עוד כלים", q:"מה זה לוח בחירה?", a:"לוח של 9 משימות מסוגים שונים, שמתוכן כל תלמיד בוחר כמה (למשל 3 או 4) לפי מה שמתאים לו. זה נותן מענה דיפרנציאלי וגם מאפשר לכל תלמיד לבחור את דרך הביטוי שקרובה לו. טיפ מהסדנה: אם התצוגה לא נוחה, בקשו בהמשך השיחה ״סדר את 9 הפעילויות בטבלה של 3 על 3 עם אפשרות להורדה כ-PDF״. אם ההורדה לא עובדת, תתעקשו ובקשו שוב."},
+   {c:"עוד כלים", q:"איך יוצרים בוחן, ואפשר ברמות שונות?", a:"בכלי הבוחן קובעים שכבת גיל, נושא ומספר שאלות. אחר כך אפשר לבקש עוד שאלות, ניקוד, או סוגי שאלות שונים. אפשר ליצור אותו בוחן בשלוש רמות (ידע והבנה, חשיבה מסדר גבוה, יישום וסינתזה) ולשייך כל רמה לקבוצה אחרת. בוחן שנוצר מתחבר לכיתה בכפתור ״קישור לכיתה״, בלי להוריד ולהעלות."},
+   {c:"עוד כלים", q:"מה עושים כלי הקריטריונים להערכה והטקסט האינפורמטיבי?", a:"קריטריונים להערכה: למטלה ארוכה, Gemini יוצר קריטריונים (למשל הבנה, כתיבה בשפה גבוהה ויצירתיות) כדי שהתלמידים ידעו על מה הם נבחנים. אפשר ליצור סטים שונים לרמות שונות. טקסט אינפורמטיבי: אפשר לבקש טקסט בכל נושא, גם בשלוש רמות, ולבקש כל טקסט בנפרד עם אפשרות הורדה כ-PDF."},
+   {c:"שאלות מהסדנה", q:"אפשר להשתמש בתוצרים גם בכיתה הפיזית?", a:"בוודאי. מורידים את התוצר למחשב, והוא שלכם לכל שימוש, גם מחוץ ל-Classroom."},
+   {c:"שאלות מהסדנה", q:"איך מעלים קישור או קובץ לסביבת הלמידה?", a:"נכנסים לכיתה, לסביבת הלמידה, ולוחצים ״יצירה״. בוחרים מטלה, בוחן, שאלה או חומר לימוד, נותנים כותרת וכותבים הוראות לתלמידים. למטה יש אפשרויות להוסיף קישור, להעלות קובץ מהמחשב או מהדרייב. אפשר גם לבחור כמה כיתות מקבילות שיקבלו את אותו פריט."},
+   {c:"שאלות מהסדנה", q:"יש כלי לחלוקת הכיתה לקבוצות?", a:"זה לא חלק מ-Gemini, אבל בקלמר של בית הספר הווירטואלי יש כלי חלוקה לקבוצות: בוחרים כיתה קיימת, קובעים כמה תלמידים בכל קבוצה (או כמה קבוצות), והכלי מחלק באקראי. כשעושים את זה מול התלמידים הם רואים שהחלוקה אקראית, וזה חוסך ויכוחים."},
+   {c:"שאלות מהסדנה", q:"על מה חשוב להקפיד?", a:"לקרוא כל תוצר מילה במילה ולבדוק שאין טעויות לפני שמשתמשים בו. לא להזין שמות תלמידים, ציונים או מידע רגיש. Gemini הוא עוזר הוראה מצוין, אבל הסמכות הפדגוגית נשארת שלכם."}
+  ]
+ },
+ 9: {
+  recording:"https://drive.google.com/file/d/1tHuzCeVOg1lmqXHI8gkbR8wO39zrK_jU/view?usp=sharing",
+  lang:"ar",
+  gallery:Array.from({length:24},(_,i)=>`slides/nahad/s-${String(i+1).padStart(2,'0')}.jpg`),
+  summary:"הסדנה הועברה בשפה הערבית. נהאד הציג איך בונים פעילויות אינטראקטיביות בערבית בעזרת Gemini Canvas, בלי לתכנת: דוגמאות (סימולציה של פונקציה קווית, משחק זיכרון, משחקי דקדוק, חדר בריחה), מתכון של 7 רכיבים לפרומפט, פרומפטים מוכנים להעתקה, בניית משחק בשידור חי, פרסום ב-Google Sites, ואתר ״פרומפט בקליק״ שכותב פרומפט מפורט. השאלות הנפוצות כתובות בערבית.",
+  summaryAr:"ورشة حول بناء أنشطة تفاعلية باللغة العربية باستخدام Gemini Canvas دون برمجة: وصفة من 7 مكوّنات للبرومبت الناجح، 11 نوعًا من الأنشطة مع برومبتات جاهزة للنسخ، التحسين بطلبات المتابعة، ومشاركة النشاط مع الطلاب برابط.",
+  faq:[
+   {c:"البداية", q:"ما هو Gemini Canvas؟", a:"مساحة عمل تفتح بجانب المحادثة في Gemini: تطلب بالكلام، فيكتب Gemini مستندًا أو يبني تطبيقًا تفاعليًا (صفحة ويب HTML) تراه وتجرّبه فورًا، ثم تعدّله بالمحادثة. يمكن إنتاج مستندات وعروض، وتطبيقات تفاعلية مثل اختبارات وألعاب وبطاقات ومحاكاة."},
+   {c:"البداية", q:"لماذا نشاط تفاعلي أصلًا؟", a:"لأن الطالب يتعلّم بنشاط لا بالاستماع فقط، ويحصل على تغذية راجعة فورية، ويزداد الدافع بالتحدي والمستويات، ويمكن مراعاة الفروق الفردية بمستويات صعوبة مختلفة. المهم أن نبدأ بالهدف: ماذا سيتعلّم الطالب من النشاط؟ ثم نختار نوعه."},
+   {c:"البداية", q:"كيف أفتح Canvas؟", a:"1. ادخلوا إلى gemini.google.com وسجّلوا الدخول بحساب Google. 2. أسفل مربّع الكتابة اختاروا Canvas (أو من قائمة الأدوات). 3. اكتبوا البرومبت واضغطوا إرسال. 4. يبني Gemini النشاط بجانب المحادثة، جرّبوه في المعاينة. 5. حسّنوه بطلبات متابعة. 6. شاركوا الرابط مع الطلاب. على الهاتف: تطبيق Gemini ثم زر الإضافة ثم Canvas."},
+   {c:"كتابة البرومبت", q:"ما مكوّنات البرومبت الناجح؟", a:"سبعة مكوّنات: 1. نوع الناتج (تطبيق تفاعلي، لعبة). 2. الصف والمادة. 3. الموضوع والهدف. 4. الكمية والمستوى (مثلًا 10 أسئلة و3 مستويات). 5. التغذية الراجعة (أخضر للصحيح وأحمر للخطأ مع شرح). 6. اللغة والاتجاه (بالعربية ومن اليمين إلى اليسار). 7. التصميم والجهاز (خط كبير، يعمل على الهاتف)."},
+   {c:"كتابة البرومبت", q:"ما الفرق بين برومبت ضعيف وبرومبت قوي؟", a:"برومبت ضعيف: «اعمل لي اختبار عن الجسم». برومبت قوي: «أنشئ تطبيقًا تفاعليًا لاختبار اختيار من متعدد لطلاب الصف الخامس في العلوم حول أجهزة جسم الإنسان: 10 أسئلة بأربعة خيارات، تغذية راجعة فورية مع شرح، عدّاد نقاط، بالعربية ومن اليمين إلى اليسار»."},
+   {c:"كتابة البرومبت", q:"كيف أضمن أن تظهر العربية بشكل صحيح؟", a:"اكتبوا دائمًا «بالعربية ومن اليمين إلى اليسار (RTL)». إذا تقطّعت الحروف اطلبوا خطًا عربيًا مثل Cairo أو Tajawal. وفي أنشطة اللغة الإنجليزية: الواجهة بالعربية والجمل الإنجليزية من اليسار إلى اليمين."},
+   {c:"أنواع الأنشطة", q:"ما أنواع الأنشطة التي يمكن بناؤها؟", a:"عُرض في الورشة 11 نوعًا مع برومبت جاهز لكل نوع: اختبار اختيار من متعدد، مطابقة بالسحب والإفلات، لعبة الذاكرة، تحدٍّ رياضي بمستويات، قصة «اختر مغامرتك»، بطاقات مفردات تنقلب، البحث عن الكلمات، خط زمني تفاعلي، محاكاة علمية، غرفة هروب رقمية، واملأ الفراغ. كل نوع يناسب أي مادة وصف: غيّروا الموضوع والصف في البرومبت فقط."},
+   {c:"أنواع الأنشطة", q:"هل يمكن بناء النشاط على مواد الدرس الخاصة بي؟", a:"نعم. أرفقوا نص الدرس أو ورقة العمل أو صورة، واطلبوا نشاطًا مبنيًا عليها فقط."},
+   {c:"أنواع الأنشطة", q:"ما هو زر Create؟", a:"زر يظهر أعلى لوحة Canvas فقط عندما يكون المفتوح مستندًا (لا تطبيقًا). يحوّل المستند إلى اختبار أو إنفوجرافيك أو صفحة ويب أو ملخّص صوتي. متاح لمن هم فوق 18 عامًا. إن لم يظهر، اطلبوا مباشرة في البرومبت، مثلًا: «حوّل هذا المستند إلى إنفوجرافيك عربي من اليمين إلى اليسار». ويمكن أيضًا البدء بـ Deep Research ثم تحويل التقرير بزر Create."},
+   {c:"التحسين والمشاركة", q:"النشاط لم يخرج كما أردت. ماذا أفعل؟", a:"لا تبدأوا من جديد، أكملوا المحادثة بطلبات متابعة مثل: «أضف مؤقّتًا»، «كبّر الخط وأضف التشكيل»، «اجعل التصميم مناسبًا للهاتف»، «زر التالي لا يعمل، أصلح المشكلة». طلب واحد واضح في كل مرة أفضل من قائمة طويلة. لتعديل جزء محدّد استخدموا Select & ask، وإن أفسد تعديلٌ التطبيق ارجعوا إلى نسخة سابقة."},
+   {c:"التحسين والمشاركة", q:"كيف أشارك النشاط مع الطلاب؟", a:"من Share ثم Share & export، وانسخوا الرابط للطلاب. قبل الحصة افتحوا الرابط على هاتف وبحساب آخر، كما سيراه الطالب. مهم: هذه الطريقة تعمل في الحساب الشخصي. في الحساب المؤسسي (حساب المدرسة) لا يمكن المشاركة برابط مباشر من Canvas."},
+   {c:"التحسين والمشاركة", q:"أعمل بالحساب المؤسسي ولا أستطيع مشاركة رابط. ماذا أفعل؟", a:"في الحساب المؤسسي لا يمكن مشاركة رابط مباشر من Canvas. الحل هو التصدير: من زر التصدير في Gemini اختاروا Google Sites، فيُنشأ موقع والنشاط مضمَّن فيه. انشروا الموقع، حدّدوا من يمكنه المشاهدة، وانسخوا الرابط للطلاب. هذه الطريقة عُرضت بالتفصيل في ورشة آشر نحماني «إنشاء تطبيقات بلمح البصر»."},
+   {c:"التحسين والمشاركة", q:"كيف أنشر النشاط عبر Google Sites خطوة بخطوة؟", a:"1. اضغطوا على «تصدير» واختاروا Google Sites، فيُنشأ موقع والنشاط مضمَّن فيه. 2. افتحوا الموقع واضغطوا «نشر». 3. اكتبوا اسمًا للموقع بالإنجليزية فقط (الاسم نفسه لا يهم): إذا ظهر باللون الأحمر فهو محجوز، وإذا ظهر بالأزرق فهو متاح. 4. في الإعدادات يمكن تغيير من يشاهد الموقع من «مستخدمو المنطقة فقط» إلى «عام» لكي يفتحه الجميع. 5. انسخوا الرابط وأرسلوه في الواتساب أو في Classroom."},
+   {c:"التحسين والمشاركة", q:"هل يمكن متابعة نتائج الطلاب في النشاط؟", a:"ليس بشكل تلقائي. جمع أسماء الطلاب ونتائجهم يطرح مشكلة خصوصية، والوزارة لا تسمح بذلك بسهولة. الهدف من النشاط هو التعلّم والمتعة. إذا أردتم استخدامه كمهمة، اطلبوا من الطالب تصوير الشاشة عند انتهائه (مثلًا النتيجة 90%) وإرسالها."},
+   {c:"كتابة البرومبت", q:"هل يكفي برومبت قصير؟", a:"لتجربة أولى نعم: في الورشة كُتب فقط «لعبة ذاكرة عن الحيوانات» وخرجت لعبة كاملة مع مستويات وعدّاد محاولات. لكن لنتيجة تناسب صفّكم فعلًا، فصّلوا: نوع اللعبة، الصف والمادة، الهدف، عدد الأسئلة والمستويات، التغذية الراجعة، اللغة والتصميم. ويمكن كتابة البرومبت بالعبرية وطلب النتيجة بالعربية أو العكس. ولا تنسوا اختيار Canvas من زر «+» قبل الكتابة."},
+   {c:"كتابة البرومبت", q:"هل توجد أداة تساعدني في كتابة البرومبت؟", a:"في نهاية الورشة شارك نهاد موقعًا مجانيًا اسمه «برومبت بنقرة»: تختارون نوع النشاط (قصة تفاعلية، لعبة ذاكرة، كلمات متقاطعة، مسابقة وغيرها)، المادة، الجمهور (الصف، تعليم عادي أو خاص أو موهوبين)، اللغة والأسلوب، فيكتب لكم برومبت مفصّلًا، ثم تفتحون Gemini وتختارون Canvas وتلصقونه. الرابط موجود في التسجيل."},
+   {c:"التحسين والمشاركة", q:"هل يمكن وضع أسماء الطلاب في النشاط؟", a:"لا. رابط المشاركة عام، وكل من يملكه يستطيع فتح التطبيق. لا تضعوا أسماء أو بيانات شخصية للطلاب. أدوات المعلّم الشخصية (مثل جدول متابعة درجات بأسماء رمزية) تبقى في حسابكم دون مشاركة أي رابط."},
+   {c:"التحسين والمشاركة", q:"هل يمكن الاعتماد على ما ينتجه Gemini كما هو؟", a:"لا. قد يخطئ Gemini في معلومة أو تشكيل أو إجابة، والمعلّم هو المحرّر الأخير. راجعوا المحتوى وجرّبوا النشاط كطالب قبل استخدامه في الصف."}
+  ]
+ },
+ 21: {
+  recording:"https://youtu.be/qjqfS1sNIz4",
+  slides:"https://canva.link/ub794nqz79ip8iq",
+  summary:"לימור הציגה איך יוצרים סרטונים לימודיים קצרים בעזרת בינה מלאכותית: מרעיון ותסריט ועד סרטון שאפשר לשלב בשיעור.",
+  faq:[
+   {c:"תכנון", q:"מאיפה מתחילים כשרוצים ליצור סרטון לימודי?", a:"ממטרה אחת ברורה: מה התלמיד צריך להבין או לדעת לעשות אחרי הצפייה. אחר כך כותבים תסריט קצר (אפשר לבקש מכלי בינה מלאכותית טיוטה ולערוך אותה), ורק בסוף בוחרים כלי ליצירת הסרטון."},
+   {c:"תכנון", q:"מה האורך המומלץ לסרטון לימודי?", a:"קצר. סרטון של כמה דקות שמתמקד ברעיון אחד עובד טוב יותר מסרטון ארוך שמכסה הרבה. אם יש הרבה תוכן, עדיף לפצל לכמה סרטונים קצרים."},
+   {c:"תכנון", q:"איך כותבים פרומפט טוב לתסריט?", a:"מציינים לאיזו כיתה, מה הנושא, מה המטרה, כמה זמן הסרטון, באיזה סגנון (הסבר, סיפור, דמות שמדברת) ובאיזו שפה. אפשר לבקש חלוקה לסצנות, עם טקסט קריינות ותיאור של מה רואים בכל סצנה."},
+   {c:"כלים", q:"באילו כלים אפשר ליצור סרטון?", a:"יש כמה אפשרויות, כמו Google Vids בחשבון הארגוני, Canva, או כלי יצירת וידאו בבינה מלאכותית. במאגר יש גם סדנה נפרדת על סרטונים ב-Vids. כדי לדעת באילו כלים לימור השתמשה, צפו בהקלטה."},
+   {c:"בדיקה ושיתוף", q:"מה לבדוק לפני שמשתפים את הסרטון?", a:"שהתוכן נכון, שהקריינות ברורה ומבוטאת נכון (במיוחד שמות ומונחים בעברית), שהכתוביות תואמות, ושאין בסרטון תמונות של תלמידים או פרטים מזהים. כדאי לצפות בו פעם אחת עד הסוף לפני השיתוף."},
+   {c:"בדיקה ושיתוף", q:"איך משלבים את הסרטון בשיעור?", a:"כדאי לתת לתלמידים משימה לפני הצפייה או במהלכה, למשל שאלה שצריך לענות עליה, ולקיים שיחה או תרגול אחריה. כך הסרטון הופך לחלק מהלמידה ולא רק לצפייה."}
+  ]
+ },
+ 18: {
+  recording:"https://drive.google.com/file/d/1EVjTJJ55nclyKiCbQk-DjzaPs96GCV22/view?usp=sharing",
+  gallery:Array.from({length:13},(_,i)=>`slides/roy/s-${String(i+1).padStart(2,'0')}.jpg`),
+  summary:"רועי הציג כלי מעשי להפקת קבצי שמע של מבחנים ודפי עבודה עבור תלמידים עם התאמת הקראה: מכינים את הטקסט (ניקוד בעזרת ״הנקדן״, פירוק קיצורים וניקוי רעשים), מדביקים אותו באתר ElevenLabs, בוחרים קול בעברית ומורידים קובץ MP3 מוכן. בסוף הסדנה הוצגו דרכים להנגיש את הקובץ לתלמיד, כולל ברקוד על הדף.",
+  faq:[
+   {c:"למה טקסט לשמע", q:"למה כדאי להפוך מבחן לקובץ שמע?", a:"לתלמידים עם קשיי קריאה, ההאזנה משחררת את חסם הקריאה: התלמיד מתרכז בהבנת הטקסט ולא בפענוח האותיות. בקובץ מוקלט התלמיד שולט בקצב (מאט, מאיץ, חוזר), ויכול להיבחן עם אוזניות בלי להיות תלוי במקריא אנושי."},
+   {c:"למה טקסט לשמע", q:"למה לא פשוט להקליט את עצמי?", a:"הקלטה עצמית דורשת זמן, שקט וריכוז, ובכל טעות צריך לתקן, לפעמים להקליט במקטעים ולחבר. הכלי מייצר קריאה בקול טבעי תוך שניות, וגם בשפות נוספות כמו אנגלית וערבית."},
+   {c:"הכנת הטקסט", q:"איך מכינים את הטקסט לפני שמעלים אותו?", a:"שלושה דברים: 1. מנקדים את הטקסט, כדי שהמילים ייהגו נכון ולא יבלבלו את התלמיד. 2. מפרקים קיצורים: כותבים ״עמוד״ ולא ״עמ׳״, ״וכולי״ ולא ״וכו׳״, כלומר כמו שזה נשמע. 3. מנקים ״רעשים״: מספרי עמודים, כותרות עליונות וכל מה שלא נחוץ להקראה."},
+   {c:"הכנת הטקסט", q:"איך מנקדים טקסט במהירות?", a:"באתר ״הנקדן״ מדביקים את הטקסט והוא מנקד אותו אוטומטית. אחר כך מעתיקים את הטקסט המנוקד ומדביקים אותו ב-ElevenLabs. הקישור לנקדן נמצא במצגת הסדנה."},
+   {c:"עבודה ב-ElevenLabs", q:"איך נכנסים ל-ElevenLabs?", a:"מחפשים בגוגל ElevenLabs. בכניסה הראשונה נרשמים, והכי פשוט עם חשבון Google. מופיע דף שמציע לרכוש מנוי: גוללים למטה ולוחצים Skip כדי להמשיך בגרסה החינמית."},
+   {c:"עבודה ב-ElevenLabs", q:"מה השלבים להפקת קובץ השמע?", a:"1. בצד שמאל בוחרים Text to Speech. 2. בצד ימין בודקים שהמודל הוא ברירת המחדל (בזמן הסדנה: Eleven v4). 3. ב-Voice בוחרים קול בעברית, גבר או אישה (מופיע דגל ישראל ליד השם). אפשר להשמיע דוגמה לפני הבחירה. 4. מדביקים את הטקסט. 5. לוחצים Generate speech, ותוך שניות הקובץ מוכן. 6. מקשיבים ומורידים כ-MP3."},
+   {c:"עבודה ב-ElevenLabs", q:"אפשר להעלות קובץ במקום להדביק טקסט?", a:"לפי מצגת הסדנה, האתר תומך בהעלאת קבצים מסוג PDF, Word ו-TXT. בהדגמה החיה לא נמצא הכפתור בממשק, ולכן הדרך שהודגמה והכי פשוטה היא להעתיק ולהדביק את הטקסט."},
+   {c:"עבודה ב-ElevenLabs", q:"כמה זה עולה?", a:"לפי מה שנאמר בסדנה, בגרסה החינמית יש 10,000 תווים בחודש. זה מספיק למבחן ממוצע אחד בחודש. אם המבחן ארוך מדי, מחלקים אותו לשני חלקים ומפיקים שני קבצים. יש גם מנויים בתשלום עם יותר תווים. כדאי לבדוק באתר, כי התנאים משתנים."},
+   {c:"עבודה ב-ElevenLabs", q:"האם ההקראה תמיד מדויקת?", a:"לא תמיד. בהדגמה בסדנה ההקראה של שיר לא הייתה מדויקת לגמרי, אף שהטקסט נוקד נכון. לכן תמיד מקשיבים לקובץ לפני שנותנים אותו לתלמיד, ואם צריך מתקנים את הטקסט ומפיקים מחדש."},
+   {c:"הנגשה לתלמיד", q:"איך מעבירים את קובץ השמע לתלמיד?", a:"שולחים את הקובץ לתלמיד, או מעלים אותו למחשב נייד או טאבלט שממנו התלמיד מאזין. דרך נוספת: מעלים את הקובץ לדרייב, מבקשים מכלי בינה מלאכותית להפוך את הקישור לברקוד (QR), ומדביקים את הברקוד על דף המבחן או דף העבודה. התלמיד סורק ומאזין."},
+   {c:"הנגשה לתלמיד", q:"לאילו חומרי למידה כדאי לשלב הקראה?", a:"לפי מצגת הסדנה: הערכה ומבחנים (הקראת הוראות ארוכות ושאלות רב-ברירה), תרגול ושיעורי בית (דפי עבודה וסיכומים שהתלמיד שומע בזמן הקריאה), ולימוד שפות זרות (EFL): הקראת טקסט באנגלית חושפת את התלמידים למבטא נכון ולהגייה ברורה. ההקראה עובדת גם באנגלית ובערבית."}
+  ]
+ },
+ 22: {
+  recording:"https://drive.google.com/file/d/1hDbIDa9oQPfBrI02CSkHIP4CsAx88pYU/view?usp=sharing",
+  slides:"https://docs.google.com/presentation/d/1xTQBVioU__Njf7D9aTUlQt2QQaBWPlWk/edit?usp=sharing",
+  lang:"ar",
+  summary:"הסדנה הועברה בשפה הערבית. תגריד ואפקאר הציגו איך משתמשים ב-Gemini Notebook (NotebookLM) בחשבון הארגוני כדי להכין חומרי לימוד: כתיבת פרומפט בארבעה רכיבים, ובסדנה הודגם הכנה לנושא ״חיקוי ביולוגי״ (ביומימיקרי) לכיתה ח׳: מצגת, מפת חשיבה, תוכנית שיעור, מבחן, כרטיסיות ואינפוגרפיקה. השאלות הנפוצות כתובות בערבית.",
+  summaryAr:"قدّمت المعلمتان تغريد محمود وأفكار الأعسم ورشة حول استخدام Gemini Notebook (NotebookLM) عبر الحساب المؤسسي لتحضير المواد التعليمية: كتابة البرومبت، إضافة المصادر، وإنتاج عرض تقديمي، خريطة ذهنية، خطة درس، اختبار، بطاقات وإنفوجرافيك حول موضوع المحاكاة الحيوية (البيومِمكري) للصف الثامن.",
+  faq:[
+   {c:"البداية", q:"كيف أدخل إلى NotebookLM؟", a:"عن طريق المدرسة الافتراضية (البيت البرتقالي): تسجيل الدخول ثم اختيار NotebookLM من أدوات جوجل. أو من خلال النقاط التسع في البريد المؤسسي. الأداة متاحة أيضًا في البريد الشخصي، لكن يُفضَّل العمل من الحساب المؤسسي."},
+   {c:"البداية", q:"لماذا يُفضَّل استخدام الحساب المؤسسي؟", a:"لأنه يعطي عددًا أكبر من مرات الاستخدام (كريديتس)، وإمكانيات أكثر إتاحة، وخصوصية أعلى: المشاركة تكون فقط مع حسابات مؤسسية، وهذا مهم عند العمل مع مواد أو صور تخص الطلاب."},
+   {c:"البداية", q:"هل يدعم NotebookLM اللغة العربية بشكل جيد؟", a:"بحسب تجربة المرشدتين، هو من أفضل الأدوات في التعامل مع اللغة العربية بشكل صحيح مقارنةً بأدوات أخرى، ويمكن تحديد لغة الإنتاج في البرومبت."},
+   {c:"كتابة البرومبت والمصادر", q:"كيف أكتب برومبت جيدًا؟", a:"من أربعة عناصر: 1. الدور، مثلًا: أنت معلم علوم خبير ومبتكر متخصص في تبسيط المفاهيم. 2. المصادر: أي ملف أو رابط يعتمد عليه. 3. المهمة بوضوح، مثلًا: استخرج خمسة مفاهيم رئيسية وابنِ اختبارًا من 10 أسئلة. 4. الجمهور، مثلًا: بلغة مبسطة وشيقة تناسب طلاب الصف السابع."},
+   {c:"كتابة البرومبت والمصادر", q:"هل يجب أن أرفع ملفات كمصادر؟", a:"لا. يمكن رفع ملفات أو روابط خاصة بك، ويمكن أيضًا أن تطلب منه البحث في الإنترنت، فيقترح مصادر وتختار أنت ما تريد. يمكن تحديد أي مصدر بالضبط يعتمد عليه، وحذف المصادر غير المناسبة."},
+   {c:"المنتجات", q:"ماذا يمكن أن أنتج بواسطة NotebookLM؟", a:"ملخص صوتي (بودكاست بين شخصين أو بصوت واحد)، ملخص فيديو، عرض تقديمي، خريطة ذهنية، تقارير ومستندات (مثل خطة درس)، بطاقات تعليمية، اختبار، وإنفوجرافيك. كل ذلك خلال دقيقة أو دقيقتين تقريبًا."},
+   {c:"المنتجات", q:"كيف أستفيد منه حسب المادة التي أدرّسها؟", a:"اللغات: بطاقات (كلمة ومعناها) وأوراق عمل. التاريخ والأدب: الاستوديو الصوتي والبودكاست. الرياضيات: أوراق عمل متدرجة لمراعاة الفروقات بين الطلاب. العلوم: إنفوجرافيك وفيديو شرح."},
+   {c:"المنتجات", q:"هل يمكن طلب أكثر من منتج في نفس الوقت؟", a:"نعم. تحضير العرض التقديمي يستغرق أحيانًا دقيقتين أو ثلاث، وخلال ذلك يمكن طلب منتجات أخرى مثل خريطة ذهنية أو اختبار أو بطاقات، فيعمل عليها بالتوازي."},
+   {c:"العرض التقديمي", q:"كيف أعدّل شريحة في العرض التقديمي؟", a:"في كل شريحة يوجد مكان للتعديل، تكتب فيه ما تريد تغييره (كلمات، صورة، إضافة). انتبه: التعديل لا يغيّر نفس العرض، بل يُنتج نسخة جديدة من العرض حسب ملاحظاتك."},
+   {c:"العرض التقديمي", q:"كيف أنزّل العرض أو أشاركه؟", a:"من النقاط الثلاث بجانب العرض: تنزيل كـ PDF (حتى لا يتغير شيء) أو كـ PowerPoint، أو مشاركة مع شخص آخر بكتابة اسمه في الحساب المؤسسي. ما يتم إنتاجه يُحفظ أيضًا في الدرايف."},
+   {c:"الاختبارات والبطاقات", q:"كيف أبني اختبارًا وأنقله إلى Google Forms؟", a:"اطلب اختبارًا وحدد التفاصيل، مثلًا 10 أسئلة مجموعها 20 علامة موزعة بالتساوي أو حسب صعوبة السؤال، مع مراعاة الفروقات. بعد ذلك يمكن نسخ الأسئلة إلى Docs أو Word، أو إلى Google Forms حيث يرتبها Gemini مع توزيع العلامات والإجابة الصحيحة."},
+   {c:"الاختبارات والبطاقات", q:"كيف تعمل البطاقات التعليمية؟", a:"على وجه البطاقة سؤال أو مصطلح، وعند الضغط عليها يظهر الجواب أو التعريف. في الورشة أنتج 50 بطاقة عن الموضوع. مناسبة جدًا للمراجعة، خاصة للطلاب الصغار وفي تعلم اللغات."},
+   {c:"المشاركة والتعاون", q:"هل يمكن مشاركة دفتر الملاحظات كاملًا مع زملاء؟", a:"نعم، يمكن مشاركة الدفتر كله أو كل منتج على حدة، بكتابة اسم الشخص كما يظهر في الحساب المؤسسي. ويمكن أن يضيف الشريك محتوى أو ملاحظات للدفتر."},
+   {c:"المشاركة والتعاون", q:"هل يمكن الاعتماد على المنتج كما هو؟", a:"لا. كما قالت المرشدتان: المعلم هو المايسترو. يجب مراجعة المنتج النهائي أكثر من مرة وقراءته وطلب التعديلات قبل استخدامه مع الطلاب."}
+  ]
+ },
+ 19: {
+  recording:"https://drive.google.com/file/d/1H_wnyc1hMSqKzo2xfH07Hrk9uuuE6Y12/view",
+  slides:"https://canva.link/ztv8ky6qxemja5x",
+  summary:"״אנחנו לא מבקשים מה-AI להכין מצגת, אנחנו מלמדים אותו מה אנחנו צריכים.״ ליטל הציגה איך יוצרים מצגת מדויקת ב-NotebookLM: מתכננים קודם (מטרה, שכבת גיל, מה התלמידים כבר יודעים), נותנים ל-NotebookLM לשאול שאלות, בונים איתו מתווה שקופית אחר שקופית, ורק אז יוצרים את המצגת. בהדגמה: מצגת פתיחה לכיתה ה׳ על אתר חיריה מתוך היחידה ״ממטרד למשאב״, ועריכה של המצגת ב-Canva.",
+  faq:[
+   {c:"לפני שמתחילים", q:"למה המצגות שה-AI מכין לא תמיד מתאימות?", a:"כי הבינה המלאכותית לא מכירה את הכיתה: מי התלמידים, מה הם כבר יודעים, אילו התאמות הם צריכים ומה המטרה של השיעור. המורה הוא המומחה הפדגוגי, והבינה המלאכותית עוזרת להפוך את הרעיון לתוצר. לכן לא מבקשים ״תכין מצגת״, אלא מלמדים אותה מה צריך."},
+   {c:"לפני שמתחילים", q:"מה צריך להחליט לפני שיוצרים מצגת?", a:"קודם כל את מטרת המצגת: חומר עזר שהתלמידים מקבלים (אז היא יכולה להיות עמוסה יותר במלל), מצגת שמלווה שיעור (רק רעיונות מרכזיים ושאלות לדיון), או פתיחה לנושא. אחר כך את שכבת הגיל: בגיל הרך יותר תמונות ומעט טקסט, ובחטיבת הביניים יותר העמקה ויותר מלל. ולבסוף, מה התלמידים כבר יודעים ומה רוצים להשיג."},
+   {c:"עבודה ב-NotebookLM", q:"איך נכנסים ומה יש במסך?", a:"דרך בית הספר הווירטואלי: מתחברים, נכנסים ל״כלים שימושיים״, פותחים את החץ ובוחרים NotebookLM, ויוצרים מחברת חדשה. במסך שלושה חלקים: בצד ימין מעלים מקורות (קבצים מהמחשב, מהדרייב או סרטוני יוטיוב), באמצע הצ׳אט, ובצד שמאל הסטודיו, שבו נוצרים התוצרים: מצגת, סקירה קולית, אינפוגרפיקה ועוד. הכלי מתבסס על המקורות שהעליתם, ולכן הוא פחות ממציא."},
+   {c:"עבודה ב-NotebookLM", q:"איך בונים את המצגת שלב אחר שלב?", a:"1. מעלים מקור. 2. בצ׳אט מבקשים מתווה ולא מצגת: ״צור מתווה למצגת עבור תלמידי כיתה ה׳. המקור הוא מתוך יחידת הוראה... מטרת המצגת: ללוות את השיעור ולהציג רעיונות מרכזיים ושאלות לשיח. לפני שאתה יוצר את המתווה, שאל אותי שאלות כדי שיהיה לך את כל המידע.״ 3. עונים על השאלות שלו (היקף השיעור, דגשים, סוג השאלות והמשימות). 4. בוחרים יחד סגנון עיצובי. 5. מקבלים מתווה שקופית אחר שקופית, ומדייקים אותו. 6. יוצרים את המצגת."},
+   {c:"עבודה ב-NotebookLM", q:"מה עדיף: ליצור את המצגת מהצ׳אט או מהמתווה כמקור?", a:"שתי האפשרויות עובדות. הדרך הפשוטה: לכתוב בצ׳אט ״צור לי את המצגת לפי המתווה״. הדרך המדויקת יותר: לשמור את המתווה כפתק (בסיכה שליד התשובה), להפוך אותו למקור, לסמן רק אותו כמקור, ובסטודיו לבקש ״צור לי מצגת בהתאם למתווה שמצורף במקור״. כל יצירה מחדש עשויה להוציא עיצוב אחר."},
+   {c:"עריכה ושימוש", q:"יש טעות או ג׳יבריש בשקף. איך מתקנים?", a:"לוחצים על השקף ובוחרים בעריכה, וכותבים מה לשנות, גם ברמת מילה אחת. שימו לב: לפעמים העריכה משנה גם את העיצוב, כי למעשה נוצרת מצגת חדשה. אם השינוי קטן, כמו מילה, אולי עדיף לתקן ב-Canva. אם השינוי משמעותי, מבקשים מ-NotebookLM."},
+   {c:"עריכה ושימוש", q:"אפשר להוסיף סרטונים או קישורים למצגת?", a:"לא ב-NotebookLM. הפתרון: להוריד את המצגת כ-PDF, להעלות אותה ל-Canva, ושם להוסיף סרטונים, קישורים ואלמנטים. ב-Canva בוחרים ״עריכה״ ואז ״שכבות קסם״, וכך אפשר לערוך גם את הטקסט ואת התמונות שבשקפים."},
+   {c:"עריכה ושימוש", q:"איך שומרים, מורידים ומקרינים?", a:"אפשר להוריד כ-PDF או כ-PowerPoint, ואפשר להקרין ישירות מהסטודיו. כל המצגות נשמרות בספרייה של המחברת, ואפשר לשנות להן שם (למשל ״שיעור 1״) כדי להתמצא. אפשר גם לבחור פונט, אם מציינים אותו במתווה."}
+  ]
+ },
+ 6: {
+  recording:"https://drive.google.com/file/d/12BpE82XmJ1ntNnrAs2sHTSwhqKGEUucW/view?usp=drivesdk",
+  site:"https://sites.google.com/edu-darom.org.il/appchik/full-page-embed",
+  siteLabel:"לאתר המלווה: מאגר פרומפטים",
+  summary:"אשר הציג איך מורים בונים אפליקציות לימודיות בלי לדעת לתכנת (Vibe Coding): מתארים במילים מה רוצים, Gemini הארגוני כותב את הקוד, ובלחיצת כפתור האפליקציה מתפרסמת באתר Google Sites עם קישור חי. בסדנה נבנו טיימר כיתתי ומחולל דפי עבודה בחשבון, והוצגו האתר המלווה עם מאגר פרומפטים לפי קטגוריות, מחולל פרומפטים, ומאגר מחוזי לשיתוף האפליקציות שהמורים בונים.",
+  faq:[
+   {c:"מה זה Vibe Coding", q:"מה זה Vibe Coding?", a:"יצירת אפליקציות ותוכנות בשפה רגילה: מתארים לבינה המלאכותית מה רוצים שהאפליקציה תעשה, והיא כותבת את הקוד. המונח נטבע על ידי אנדריי קרפתי בפברואר 2025. במקום שבועות של כתיבת קוד ובדיקות, מקבלים טיוטה עובדת תוך שניות או דקות, ואפשר תמיד לשפר אותה."},
+   {c:"מה זה Vibe Coding", q:"מה הערך הפדגוגי של אפליקציות שמורים בונים בעצמם?", a:"בסדנה הוצגו שלושה צרכים: מענה למגוון לומדים (רמות קושי, הקראה בקול, תרגול בקצב אישי), גיוון דרכי הוראה והערכה (משחקים, סימולציות, חידונים, חדרי בריחה ומשוב מיידי), וחיסכון בזמן ההכנה."},
+   {c:"כתיבת פרומפט טוב", q:"איך כותבים פרומפט טוב לאפליקציה?", a:"פרומפט טוב בנוי מארבעה חלקים, שכל אחד עונה על שאלה: 1. מה ולמי? המטרה והקהל, למשל ״אפליקציית אינטרנט בעברית לשימוש מורה בכיתה״. 2. מה קורה בכל לחיצה? הפונקציות, כפתורים ותיבות. 3. איך זה נראה? העיצוב, צבעים וגודל הפונט. 4. מה לא צריך? המגבלות, למשל ״קובץ אחד בלבד, בלי התחברות ובלי שרת״."},
+   {c:"כתיבת פרומפט טוב", q:"למה חשוב לכתוב בפרומפט ״בעברית״?", a:"כדי שהממשק יוצג מימין לשמאל. קוד נכתב כברירת מחדל משמאל לימין, ולכן תמיד כדאי לבדוק את כיוון התצוגה, ואם צריך לבקש במפורש תצוגה מימין לשמאל (RTL)."},
+   {c:"כתיבת פרומפט טוב", q:"האפליקציה לא יצאה כמו שרציתי. מה עושים?", a:"לא מתקנים את הקוד בעצמכם, אלא כותבים ל-Gemini מה לשנות, למשל ״תגדיל את הכפתורים״, ״תוסיף צליל כשעונים נכון״ או ״תתאים לטלפון״. כשמשהו לא עובד, מתארים מה לא עובד ומבקשים תיקון. חשוב לבקש תיקון אחד בכל פעם, כי ריבוי בקשות עלול לבלבל אותו. ולא להתייאש: לפעמים צריך כמה ניסיונות."},
+   {c:"כתיבת פרומפט טוב", q:"איך בונים אפליקציה אחת שמתאימה לכל מקצוע?", a:"מבקשים בפרומפט ״מצב עריכה״ שבו המורה מכניסה תוכן משלה. כך בונים את האפליקציה פעם אחת ומשתמשים בה בכל נושא."},
+   {c:"בנייה ב-Gemini", q:"איך נכנסים ל-Gemini הארגוני?", a:"מחפשים בגוגל ״בית הספר הווירטואלי״, לוחצים על התחברות ומזדהים עם שם משתמש וסיסמה. בכלים השימושיים לוחצים על אחד מכלי Google, למשל Classroom, ובתפריט תשע הנקודות בוחרים Gemini."},
+   {c:"בנייה ב-Gemini", q:"מה צריך להפעיל ב-Gemini כדי שייצור אפליקציה?", a:"את Canvas, שמנחה את Gemini לכתוב קוד, ומודל החשיבה (Thinking) לפתרון בעיות מורכבות. אחרי זה מדביקים את הפרומפט ושולחים. כשהקוד מוכן לוחצים על ״תצוגה מקדימה״ כדי לנסות את האפליקציה."},
+   {c:"פרסום ושיתוף", q:"איך מקבלים קישור לאפליקציה כדי לשתף תלמידים?", a:"ב-Gemini הארגוני לוחצים על ״ייצוא״ ובוחרים Google Sites. נוצר אתר חדש שהאפליקציה כבר מוטמעת בו. לוחצים ״פרסום״, נותנים לאתר כתובת באנגלית בלבד (בעברית זה לא יעבוד), מגדירים הרשאות צפייה, מפרסמים ומעתיקים את הקישור."},
+   {c:"פרסום ושיתוף", q:"למה לא פשוט לשתף קישור ישירות מ-Gemini?", a:"בחשבון הארגוני (חשבון בית הספר) אי אפשר לשתף קישור ישיר מ-Canvas. לכן מייצאים ל-Google Sites, ומשם מקבלים קישור. בחשבון Google אישי אפשר לשתף קישור ישיר דרך Share, כמו שהוסבר בסדנה של נהאד מצרי, אבל העבודה בחשבון הארגוני מומלצת."},
+   {c:"פרסום ושיתוף", q:"מי יכול לראות את האפליקציה שפרסמתי?", a:"זה תלוי בהגדרה בזמן הפרסום: אפשר להגביל את הצפייה רק למשתמשי החשבון הארגוני של מחוז דרום, או להגדיר את האתר כציבורי, כך שכל מי שיש לו את הקישור יוכל לצפות בו."},
+   {c:"פרסום ושיתוף", q:"אפשר להעלות את האפליקציה גם לאתרים אחרים?", a:"כן. אפשר להוריד את הקוד ולהטמיע אותו בכל אתר שמקבל קוד HTML. הייצוא הישיר ל-Google Sites פשוט חוסך את השלבים האלה."},
+   {c:"פרסום ושיתוף", q:"מה זה המאגר המחוזי באתר המלווה?", a:"לשונית באתר המלווה שבה משתפים את האפליקציות שבניתם: שם, קישור, תיאור קצר, תחום, שכבת גיל ושם המורה. כך מורים במחוז יכולים להשתמש באפליקציות של עמיתים. בסדנה הוצגו בו, למשל, סימולציה של מצבי צבירה של מים ואפליקציית ״מי עונה״."},
+   {c:"האתר המלווה", q:"מה יש באתר המלווה לסדנה?", a:"מדריך הסדנה עם כל ההסברים; מאגר אפליקציות ופרומפטים מוכנים לפי קטגוריות (ניהול כיתה, כלים למורה, משחקי חזרה, רגשי חברתי, חינוך מיוחד והכלה), שאפשר להעתיק ישר ל-Gemini; ״הרעיונות שלי״, שבו כותבים שם ותחום של אפליקציה ומקבלים פרומפט מוכן; ומאגר מחוזי לשיתוף."},
+   {c:"פרטיות ותקלות", q:"האם הנתונים שמכניסים לאפליקציה נשמרים או נחשפים?", a:"לא. מה שמוכנס לאפליקציה, למשל שמות תלמידים, נשמר רק בדפדפן ובמכשיר של מי שהכניס אותו, ולא מופץ ברשת. לכן אם רוצים לשמור נתונים לאורך זמן, הם לא יישמרו כאן. ובנוסף: לא כותבים שמות תלמידים בתוך הצ׳אט עם Gemini, מטעמי פרטיות."},
+   {c:"פרטיות ותקלות", q:"כפתור ההדפסה לא עובד. מה עושים?", a:"בתצוגה המקדימה ב-Gemini ההדפסה לא עובדת. אפשר לפרסם ב-Google Sites, או להוריד את הקובץ כ-HTML ולפתוח אותו בדפדפן במחשב. פתרון נוסף שהודגם בסדנה: לבקש מ-Gemini להחליף את כפתור ההדפסה בכפתור ייצוא ל-PDF."}
+  ]
+ },
+ 14: {
+  recording:"https://drive.google.com/file/d/1Hi8q8F-x05Wt2I03zST9J4bGfF9AUGxP/view?usp=drivesdk",
+  slides:"https://canva.link/ha4nlya4j9zxrvv",
+  tool:["Gemini","Google Vids"],
+  summary:"בסדנה ג׳קלין הדגימה תהליך מלא ליצירת סרטון לימודי קצר בבינה מלאכותית: מקבלים רעיון ותסריט מ-Gemini בעזרת אפליקציה שמייצרת את הפרומטים, יוצרים תמונה לכל סצנה, מנפישים כל סצנה ב-Google Vids ומחברים הכול לסרטון אחד. הדוגמאות בסדנה: דוד וגוליית, ומחזור המים בטבע.",
+  faq:[
+   {c:"התהליך בקצרה", q:"מה השלבים ליצירת סרטון AI לימודי?", a:"1. כותבים באפליקציה את נושא הסרטון ומעתיקים את הפרומט שהיא מייצרת. 2. פותחים את Gemini (יש כפתור באפליקציה), מדביקים ומקבלים כמה רעיונות לסרטון. 3. מעתיקים את הרעיון שבחרתם בחזרה לאפליקציה, מגדירים אורך, מספר סצנות וסגנון, ומעתיקים את הפרומט השני. 4. מדביקים אותו באותה שיחה ב-Gemini ומקבלים תסריט מלא לפי סצנות. 5. מבקשים מ-Gemini ליצור תמונה לכל סצנה ומורידים אותן. 6. ב-Google Vids מעלים כל תמונה עם הקריינות, תנועת המצלמה והמוזיקה של הסצנה, ומייצרים. 7. מוסיפים כל סצנה לבמה, מוסיפים מעברים ומייצאים."},
+   {c:"התהליך בקצרה", q:"באילו כלים משתמשים בתהליך?", a:"בשלושה כלים: האפליקציה שג׳קלין שלחה, שמייצרת את הפרומטים; Gemini, לרעיונות, לתסריט וליצירת התמונות; ו-Google Vids, להנפשת הסצנות ולעריכת הסרטון."},
+   {c:"תכנון התסריט", q:"מה האפליקציה עושה, ואיך היא מתחברת ל-Gemini?", a:"האפליקציה כותבת עבורכם את הפרומטים. כותבים בה נושא (למשל ״חנוכה״) והיא מייצרת פרומט שמבקש מ-Gemini לפעול כתסריטאי ובמאי של סרטונים חינוכיים ולהציע רעיונות. מעתיקים את הפרומט בכפתור ״העתקת פרומט״, ובכפתור ״פתיחת Gemini״ נפתח Gemini ישירות, שם מדביקים."},
+   {c:"תכנון התסריט", q:"איך קובעים את אורך הסרטון ומספר הסצנות?", a:"באפליקציה, אחרי שמדביקים את הרעיון שנבחר. כל סצנה היא כ-10 שניות, ולכן בסדנה נבחרו 5 סצנות לסרטון של 50 שניות. אפשר גם להאריך לדקה."},
+   {c:"תכנון התסריט", q:"מה כולל התסריט ש-Gemini מחזיר?", a:"לכל סצנה: טקסט קריינות, תנועת מצלמה, מוזיקה ואפקטים קוליים, ותיאור תמונה. את המוזיקה והקריינות לא צריך להוסיף בנפרד, הן כבר מובנות בפרומט שהאפליקציה כותבת."},
+   {c:"תכנון התסריט", q:"מה עושים אם משהו בתסריט לא מתאים?", a:"מתקנים בשיחה עצמה ב-Gemini, לא באפליקציה. כותבים לו בדיוק מה לשנות, למשל ״תתקן את סצנה 3 כך ש...״."},
+   {c:"תכנון התסריט", q:"למה התסריט כולל גם פרומט לתמונה, אם Gemini יוצר את התמונות?", a:"כגיבוי. אם נגמרו הקרדיטים ליצירת תמונות, אפשר לקחת את התיאורים האלה למחולל תמונות אחר ולשמור על אותן דמויות ואותו סגנון בכל הסצנות."},
+   {c:"יצירת הסצנות ב-Vids", q:"איך נכנסים ל-Google Vids?", a:"נכנסים לבית הספר הווירטואלי ומתחברים. פותחים אחד מכלי Google, כמו Gmail, Drive או Classroom (לא Gemini ולא NotebookLM), ובתפריט תשע הנקודות מוצאים את Vids."},
+   {c:"יצירת הסצנות ב-Vids", q:"איך יוצרים סצנה מונפשת ב-Vids?", a:"פותחים סרטון ריק ונכנסים לאזור סרטוני ה-AI. מעלים את התמונה של הסצנה, ובתיבת הטקסט מדביקים את הקריינות, תנועת המצלמה והמוזיקה של אותה סצנה. את תיאור התמונה לא צריך, כי התמונה כבר קיימת. לוחצים על יצירה, וזה לוקח כמה שניות עד דקות."},
+   {c:"יצירת הסצנות ב-Vids", q:"למה הסרטון שיצרתי נעלם?", a:"סרטונים שנוצרו באזור יצירת הסרטונים לא נשמרים שם. אם יוצאים מהפרויקט וחוזרים, הם לא יהיו. ברגע שסצנה מוכנה צריך ללחוץ ״הוספה״ כדי להעביר אותה לבמה, כלומר לרצף השקפים של הסרטון."},
+   {c:"יצירת הסצנות ב-Vids", q:"איך מונעים קפיצה חדה בין סצנות?", a:"בין שקף לשקף בבמה אפשר להוסיף הנפשת מעבר, למשל מעבר עדין, כדי שהסרטון ייראה רציף. אפשר גם לגרור סצנות ולשנות את הסדר שלהן."},
+   {c:"יצירת הסצנות ב-Vids", q:"מה עוד אפשר לעשות ב-Vids חוץ מסרטוני AI?", a:"Vids הוא עורך וידאו מלא: אפשר להוסיף תמונות מ-Drive, להקליט מדריכים, להשתמש בתבניות ולהפוך מצגת לסרטון. לאחרונה נוספה גם יצירה בעברית."},
+   {c:"שמירה וייצוא", q:"איך שומרים את הסרטון הסופי?", a:"בתפריט ״קובץ״ יש שתי אפשרויות: הורדה כקובץ MP4 למחשב, או ייצוא ל-Drive. בשתיהן מתקבל סרטון סגור שאי אפשר לערוך. פרויקט העריכה עצמו נשמר בנפרד, ואפשר לבחור באיזו תיקייה בדרייב לשמור אותו כדי לחזור ולערוך בהמשך."},
+   {c:"תקלות ומגבלות", q:"Vids מסרב ליצור סצנה. מה עושים?", a:"לפעמים מופיעה הודעה שהבקשה לא מתאימה. בסדנה עלו כמה סיבות אפשריות: דמויות של ילדים, מילים שהמערכת מזהה כחשודות, או תמונות מציאותיות מדי. אפשר לנסות שוב, לנסח מחדש את הקריינות, לנסות בחשבון אחר, או לבדוק את חיבור האינטרנט. בהדגמה בסדנה סצנה אחת לא הצליחה גם אחרי כמה ניסיונות."},
+   {c:"תקלות ומגבלות", q:"כמה סרטונים אפשר ליצור?", a:"לפי מה שנאמר בסדנה, ב-Vids יש מכסת קרדיטים חודשית (הוזכר מספר של עד 50 קרדיטים בחודש). ב-Gemini, גם בגרסת Pro, יצירת סרטונים מוגבלת לכשלושה סרטונים ביום. המכסות משתנות מעת לעת, לכן כדאי לבדוק בחשבון שלכם."},
+   {c:"תקלות ומגבלות", q:"מה ההבדל בין ליצור סרטון ב-Vids לבין ליצור אותו ב-Gemini?", a:"התהליך כמעט זהה: בשניהם צריך תסריט מסודר, וכדי לשמור על דמות עקבית לאורך הסרטון כדאי להעלות תמונה של הדמות. ההבדל העיקרי הוא המכסה: ב-Gemini אפשר ליצור רק מעט סרטונים ביום."}
+  ]
+ }
+};
+
+const W = [
+ {t:"זהירות בינה: ממה צריך להיזהר בבינה, אתיקה וכללי אצבע", p:["יפעת אריאל"], topic:["אתיקה","בטיחות ופרטיות"], kw:"אתיקה זהירות סכנות פרטיות בטיחות כללים אחראי"},
+ {t:"לשרוד את הג׳ונגל הבית ספרי: ארגז כלי AI ללקויות למידה", p:["ליאת כהן"], tool:["NotebookLM"], make:["משאבי הוראה"], topic:["לקויות למידה","התאמות והנגשה"], kw:"לקויות למידה התאמות הנגשה ארגז כלים חינוך מיוחד דיסלקציה תפקודים ניהוליים פישוט טקסט מפת מושגים אינפוגרפיקה סקירה קולית פודקאסט פיגומים כתיבה כרטיסיות בוחן שליפה נוטבוק notebook notebooklm"},
+ {t:"מחברים את Gemini לסביבת העבודה ב-Drive", p:["עאמר גמל"], ar:1, tool:["Gemini","Gemini Canvas","Google Docs","Google Drive"], make:["דפי עבודה","משאבי הוראה"], kw:"ג'מיני גמיני דרייב גוגל סביבת עבודה קנבס canvas docs דוקס מסמך דף עבודה ייצוא ניקוד ציונים בונוס שיטס גיליון טבלת ציונים ממוצע מחזור המים מדעים תיקיות"},
+ {t:"להפוך את Gemini (הארגוני) לעוזר הוראה יעיל", p:["מאיר קשאני"], tool:["Gemini","Google Drive"], make:["סקילים"], topic:["עוזר הוראה"], kw:"סקיל סקילים gmail יומן מייל דרייב מערכת שעות דף עבודה אפליקציות מקושרות workspace ג'מיני גמיני ארגוני עוזר הוראה יעילות תכנון שיעור"},
+ {t:"יצירת סקילים ככלי מקדם כתיבה", p:["יעלה אגאי"], tool:["Gemini"], make:["סקילים"], topic:["כתיבה"], kw:"ג'מיני גמיני gems ג'מס סקיל סקילים skills כתיבה מיומנויות משוב מקדם הודעות להורים סיכום ישיבה הנחיות קבועות סגנון אישי פרומפט"},
+ {t:"יצירת אפליקציות בצ׳יק: מורים בונים אפליקציות בעזרת בינה מלאכותית, בלי לדעת לתכנת", p:["אשר נחמני"], tool:["Gemini","Google Sites","Vibe Coding"], make:["אפליקציות","סימולציות"], kw:"אפליקציה אפליקציות תכנות קוד בלי לתכנת ווייב vibe coding"},
+ {t:"משאבי הוראה מגוונים ב-NotebookLM", p:["חדווה נדב"], tool:["NotebookLM"], make:["משאבי הוראה","מבחנים","מצגות"], kw:"נוטבוק notebook notebooklm משאבים חומרי למידה פודקאסט סקירה קולית הסבר קולי בוחן כרטיסי תרגול מצגת דיפרנציאלי מאגר פרומפטים"},
+ {t:"יצירת טפסים ב-Google Forms באמצעות AI: טפסים, סקרים ומבחנים בתוך דקות", p:["נעמה אהרוני"], tool:["Google Forms","Gemini","Google Classroom"], make:["טפסים ומבחנים","סקרים"], kw:"טופס טפסים פורמס forms סקר סקרים מבחן מבחנים בוחן בחנים הערכה שאלון משוב ציונים ניקוד שיטס גיליון קלאסרום"},
+ {t:"פעילויות אינטראקטיביות ב-Gemini", p:["נהאד מצרי"], ar:1, tool:["Gemini","Gemini Canvas"], make:["פעילויות אינטראקטיביות","משחקים","מבחנים"], kw:"ג'מיני גמיני קנבס canvas פעילות פעילויות אינטראקטיבי משחק חידון חדר בריחה סימולציה כרטיסיות"},
+ {t:"יצירת סיפורים חברתיים ב-Gemini Storybook", p:["ליאת ביתן"], tool:["Gemini Storybook","Canva"], make:["סיפורים","ספרונים"], topic:["למידה רגשית חברתית","חינוך מיוחד"], kw:"heyzine הייזין ג'מיני גמיני סטוריבוק storybook סיפור סיפורים חברתי רגשי ספר ספרון ספרונים רצף אוטיזם הקראה קנבה ספר מדפדף עידוד קריאה"},
+ {t:"מתמונה למשמעות: יצירת תמונות ככלי חזותי ללמידה", p:["יעלה אגאי"], tool:["Gemini","ChatGPT"], make:["תמונות","קומיקס","אינפוגרפיקה"], kw:"תמונה תמונות חזותי ויזואלי איור איורים יצירת תמונות עריכת תמונה מדרש תמונה ספרון כרטיס משימה ננו בננה צ'אט gpt"},
+ {t:"יצירת משחקים לימודיים בבינה מלאכותית", p:["ראניה אבו שארב"], ar:1, tool:["Gemini Canvas","ChatGPT"], make:["משחקים"], kw:"משחק משחקים משחוק לימודי גיימיפיקציה חדר בריחה תלת מימד לוח הכפל דקדוק ערבית קנבס"},
+ {t:"הופכים חומר למידה מודפס לדף אינטראקטיבי עם התאמות", p:["שחר פריינד"], make:["דפים אינטראקטיביים","פעילויות אינטראקטיביות"], topic:["התאמות והנגשה"], kw:"דף עבודה מודפס אינטראקטיבי התאמות הנגשה דיגיטלי"},
+ {t:"סרטוני AI ב-Vids", p:["ג׳קלין היינה"], tool:["Gemini","Google Vids"], make:["סרטונים"], kw:"סרטון סרטונים וידאו וידיאו vids וידס"},
+ {t:"AI ב-Classroom ליצירת משאבי למידה", sub:"סיור בכל ארגז הכלים: מערך שיעור, מצגת, תמונות ולוח בחירה", p:["יעל באט"], tool:["Google Classroom","Gemini"], make:["משאבי הוראה","מצגות","מבחנים"], kw:"קלאסרום classroom כיתה משאבים חומרי למידה מערך שיעור לוח בחירה בוחן קריטריונים חלוקה לקבוצות ג'מיני גמיני"},
+ {t:"משחוק ובינה מלאכותית לעידוד למידה אינטראקטיבית", p:["ניקול אוחנה קולר"], tool:["Gemini"], make:["משחקים","פעילויות אינטראקטיביות","חדרי בריחה"], kw:"משחוק משחק משחקים גיימיפיקציה אינטראקטיבי מוטיבציה קונדיטוריה שברים חדר בריחה משחק תפקידים ראיון הרפתקה ניקוד משוב רמות קושי דיפרנציאלי"},
+ {t:"עוברים מרעיון ליצירה באמצעות Vibe Coding: תכנון ויצירת פעילויות אינטראקטיביות למתחילים", p:["אפרת בן סלומון"], tool:["Vibe Coding","Gemini Canvas","Google Sites"], make:["פעילויות אינטראקטיביות","אפליקציות","משחקים","סימולציות"], topic:["חינוך מיוחד"], kw:"משחוק סימולציה המחשה משימת בריחה כרטיסיות גלגל שאלות הטמעת קוד וייב קודינג vibe coding קוד תכנות אפליקציה פעילות אינטראקטיבי מתחילים"},
+ {t:"מטקסט לשמע: קריינות לימודית ליצירת התאמות והקראה", p:["רועי מולגן"], tool:["ElevenLabs"], make:["קריינות ושמע"], topic:["התאמות והנגשה"], kw:"אילבן לאבס אלבן לבס נקדן ניקוד mp3 מבחן ברקוד קריינות שמע קול הקראה הקלטה אודיו התאמות הנגשה טקסט לדיבור"},
+ {t:"מצגות ייחודיות ב-Gemini Notebook", p:["ליטל שי"], tool:["NotebookLM","Canva"], make:["מצגות"], kw:"מצגת מצגות שקופיות ג'מיני גמיני נוטבוק notebook notebooklm מתווה מקורות קנבה שכבות קסם"},
+ {t:"״זרקור על הרכז״: רכזי תקשוב משתפים", p:["טל מזגאוקר","קרן דמאי","כאמל אלנבארי","יאזן עוביד זועבי"], tool:["Base44","Claude Code"], make:["אפליקציות","לומדות"], topic:["שיתוף עמיתים","ניהול בית ספרי"], kw:"רכז רכזים תקשוב שיתוף עמיתים פרקטיקות מהשטח טל מזגאוקר יאזן עוביד זועבי קרן דמאי כאמל אלנבארי שריון מחשבים עגלת מחשבים תקלות עברית מדוברת דוברי ערבית וואטסאפ לומדה היסטוריה העתקות יושרה אקדמית מסך חי מסדרון מערכת שעות אתגר הפסקה קלוד"},
+ {t:"סדנת סרטונים לימודיים", p:["לימור בן ארי"], make:["סרטונים"], kw:"סרטון סרטונים וידאו וידיאו לימודי"},
+ {t:"היכרות ויצירת חומרי למידה מגוונים ב-Gemini Notebook", p:["תגריד מחמוד","אפקאר אלאעסם"], ar:1, tool:["Gemini Notebook"], make:["משאבי הוראה","מצגות","מבחנים"], kw:"ג'מיני גמיני נוטבוק notebook notebooklm חומרי למידה משאבים מצגת מבחן כרטיסיות אינפוגרפיקה מפת חשיבה פודקאסט"},
+ {t:"יצירת צ׳אטבוט (Gem) אישי", p:["ד״ר ישראל נעים"], tool:["Gemini Gems"], make:["צ׳אטבוטים","סקילים"], topic:["עוזר הוראה"], kw:"עוזר פדגוגי knowledge מסמך ידע סקיל צאטבוט צ'אטבוט בוט gem גם ג'ם עוזר אישי ג'מיני גמיני"},
+ {t:"AI ב-Classroom ליצירת משאבי למידה", sub:"מהכלי ישר לכיתה: בוחן שבודק את עצמו וקריטריונים להערכה", p:["טניה נגב"], tool:["Google Classroom","Gemini","Google Forms"], make:["משאבי הוראה","מבחנים","מצגות"], kw:"קלאסרום classroom כיתה משאבים חומרי למידה בוחן מבחן קריטריונים מחוון רובריקה הערכה אוצר מילים לוח בחירה מערך שיעור ג'מיני גמיני"},
+ {t:"אתיקה ובינה מלאכותית: הנחיות לשימוש אחראי", p:["יעלה אגאי"], topic:["אתיקה","בטיחות ופרטיות"], kw:"אתיקה אחראי הנחיות זהירות פרטיות מדיניות הוגנות הטיות מגדר אמינות הזיות חנפנות שיקול דעת אחריות משרד החינוך שכבות גיל"}
+];
+const ACCENTS=["#0b8a9c","#de7a2c","#2f3a8f","#e9a93a","#7a4bb0","#1f9d74"];
+W.forEach((w,i)=>{w.id=i+1;w.tool=w.tool||[];w.make=w.make||[];w.topic=w.topic||[];
+  if(w.ar) w.topic=w.topic.concat([]);
+  w.accent=ACCENTS[i%ACCENTS.length];w.c=CONTENT[w.id]||null;});
+
+/* ---------- search ---------- */
+const STOP=new Set(["אני","רוצה","רוצים","רוצות","ללמוד","לדעת","על","את","הכלי","כלי","כלים","ליצור","איך","של","עם","בעזרת","באמצעות","מחפש","מחפשת","מחפשים","נושא","הנושא","סדנה","סדנת","סדנאות","משהו","קצת","גם","או","ו","ai","בינה","מלאכותית","הבינה","המלאכותית","לבנות","להכין","יצירת","יצירה","יוצרים","צור","הכנת","בניית","בונים","מכינים","ללמד","לימוד","שימוש","להשתמש","בכלי","רוצה","אפשר","דרך"]);
+const SYN={ "גמיני":"gemini","ג'מיני":"gemini","גימיני":"gemini","נוטבוק":"notebook","קלאסרום":"classroom","פורמס":"forms","וידס":"vids",
+  "וידאו":"סרטון","וידיאו":"סרטון","בוט":"צאטבוט","צ'אטבוט":"צאטבוט","ג'ם":"gem","שקופיות":"מצגת","בוחן":"מבחן","שאלון":"טופס",
+  "גיימיפיקציה":"משחוק","קוד":"תכנות","הקראה":"קריינות","קול":"שמע","אודיו":"שמע","איור":"תמונה","ויזואלי":"חזותי"};
+function norm(s){return s.toLowerCase().replace(/[׳']/g,"'").replace(/[״"]/g,'').replace(/[֑-ׇ]/g,'').replace(/[^\p{L}\p{N}' ]+/gu,' ').trim();}
+function stem(w){
+  w=w.replace(/'/g,"'");
+  if(SYN[w]) w=SYN[w];
+  if(/^[a-z0-9]+$/.test(w)) return w.replace(/s$/,'');
+  let s=w.replace(/'/g,'');
+  for(let k=0;k<2 && s.length>3 && /^[והבלמשכ]/.test(s);k++){ if(STEMSET.has(s)) break; s=s.slice(1); }
+  s=s.replace(/(ים|ות|יות)$/,'').replace(/ה$/,'');
+  if(s.length>3) s=s.replace(/י$/,'');
+  return s;
+}
+let STEMSET=new Set();
+function tokens(s){return norm(s).split(/\s+/).filter(Boolean);}
+// first pass: collect raw words so prefix stripping won't eat real words
+W.forEach(w=>{const txt=[w.t,w.sub||'',w.p.join(' '),w.tool.join(' '),w.make.join(' '),w.topic.join(' '),w.kw].join(' ');
+  tokens(txt).forEach(x=>STEMSET.add(x.replace(/'/g,'')));});
+W.forEach(w=>{
+  const txt=[w.t,w.sub||'',w.p.join(' '),w.tool.join(' '),w.make.join(' '),w.topic.join(' '),w.kw,w.ar?'ערבית בערבית ערבי':'',w.c&&w.c.faq?w.c.summary+' '+(w.c.summaryAr||'')+' '+w.c.faq.map(f=>f.q+' '+f.a).join(' '):''].join(' ');
+  w.stems=new Set(tokens(txt).map(stem));
+  w.titleStems=new Set(tokens(w.t+' '+(w.sub||'')).map(stem));
+  w.tagStems=new Set(tokens([w.p.join(' '),w.tool.join(' '),w.make.join(' '),w.topic.join(' '),w.kw,w.ar?'ערבית בערבית ערבי':''].join(' ')).map(stem));
+});
+function score(w,qs){
+  // strong = token found in title or tags; weak = only in summary/FAQ text or as a prefix
+  let s=0,hit=0,strong=0;
+  for(const q of qs){
+    let best=0;
+    if(w.titleStems.has(q)) best=3;
+    else if(w.tagStems.has(q)) best=2;
+    else if(w.stems.has(q)) best=1;
+    else for(const x of w.stems){ if(q.length>=3 && (x.startsWith(q)||q.startsWith(x)&&x.length>=4)){best=1;break;} }
+    if(best){hit++;s+=best; if(best>=2) strong++;}
+  }
+  return {s,hit,strong};
+}
+
+/* ---------- render ---------- */
+const grid=document.getElementById('grid'), q=document.getElementById('q');
+let langFilter='all';
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const names=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' ו'+a[a.length-1];
+const initials=n=>n.replace(/^(ד[״"']ר|פרופ[׳']?)\s+/,'').split(/\s+/).slice(0,2).map(x=>x[0]).join('');
+function hl(text,raw){
+  let out=esc(text);
+  const words=tokens(raw).filter(x=>!STOP.has(x)&&x.length>1).map(x=>x.replace(/^[והבלמשכ](?=.{3,})/,''));
+  words.forEach(wd=>{ if(wd.length<2) return; const re=new RegExp('('+wd.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'); out=out.replace(re,'<mark>$1</mark>'); });
+  return out;
+}
+function card(w,raw){
+  const tags=[...w.tool.map(x=>`<span class="tag">${esc(x)}</span>`),...w.make.map(x=>`<span class="tag make">${esc(x)}</span>`),
+    ...w.topic.map(x=>`<span class="tag topic">${esc(x)}</span>`),...(w.ar?['<span class="tag ar">בשפה הערבית</span>']:[])].join('');
+  return `<article class="card" style="--accent:${w.accent}">${w.c?`<span class="ready">${w.c.pending?'הקלטה זמינה':'חומרים זמינים'}</span>`:''}
+    <h3 style="${w.c?'padding-left:96px':''}">${raw?hl(w.t,raw):esc(w.t)}</h3>
+    ${w.sub?`<div class="subt">${esc(w.sub)}</div>`:''}<div class="who"><span class="av">${esc(initials(w.p[0]))}</span>${esc(names(w.p))}</div>
+    <div class="tags">${tags}</div>
+    <div class="foot">
+      <div class="assets"><span class="${w.c&&w.c.recording?'on':''}">▶ הקלטה</span><span class="${w.c&&(w.c.slides||w.c.gallery||w.c.site)?'on':''}">${w.c&&w.c.site&&!w.c.slides&&!w.c.gallery?'⌂ אתר':'▤ מצגת'}</span><span class="${w.c&&w.c.faq?'on':''}">? ${w.c&&w.c.faq?w.c.faq.length+' שאלות':'שאלות'}</span></div>
+      <button class="open" data-id="${w.id}">לעמוד הסדנה ←</button>
+    </div></article>`;
+}
+function render(){
+  const raw=q.value.trim();
+  document.getElementById('searchBox').classList.toggle('has',!!raw);
+  const qs=[...new Set(tokens(raw).filter(x=>!STOP.has(x)).map(stem).filter(x=>x.length>1))];
+  let list=W.filter(w=>langFilter==='all'||(langFilter==='ar'?w.ar:!w.ar));
+  if(qs.length){
+    let rs=list.map(w=>({w,...score(w,qs)}));
+    // prefer workshops matching every search word; fall back to any word
+    let all=rs.filter(r=>r.hit===qs.length);
+    if(!all.length) all=rs.filter(r=>r.hit>0);
+    // if some workshops match in title/tags, hide ones that only mention it in passing
+    if(all.some(r=>r.strong===r.hit)) all=all.filter(r=>r.strong===r.hit);
+    list=all.sort((a,b)=>b.hit-a.hit||b.s-a.s).map(r=>r.w);
+  } else {
+    // workshops without a recording go to the bottom of the default list
+    const NOREC=new Set([1,5,16,23]);
+    list=[...list.filter(w=>!NOREC.has(w.id)),...list.filter(w=>NOREC.has(w.id))];
+  }
+  grid.innerHTML=list.map(w=>card(w,raw)).join('');
+  document.getElementById('empty').classList.toggle('on',!list.length);
+  document.getElementById('count').innerHTML = qs.length
+    ? (list.length===1?`נמצאה <b>סדנה אחת</b>`:`נמצאו <b>${list.length}</b> סדנאות`)+` עבור "${esc(raw)}"`
+    : `<b>${list.length}</b> סדנאות במאגר`;
+}
+
+/* ---------- intents & chips ---------- */
+const uniq=a=>[...new Set(a)];
+const CH={
+  tool:{list:uniq(W.flatMap(w=>w.tool)),prefix:"אני רוצה ללמוד על הכלי "},
+  make:{list:uniq(W.flatMap(w=>w.make)),prefix:"אני רוצה ללמוד ליצור "},
+  topic:{list:uniq(W.flatMap(w=>w.topic)).concat(["בשפה הערבית"]),prefix:"אני מחפש/ת נושא "}
+};
+for(const k in CH){
+  document.getElementById('chips-'+k).innerHTML=CH[k].list.map(x=>`<button type="button" class="chip" data-k="${k}">${esc(x)}</button>`).join('');
+}
+document.querySelectorAll('.intent').forEach(b=>b.addEventListener('click',()=>{
+  const k=b.dataset.intent, on=b.getAttribute('aria-pressed')!=='true';
+  document.querySelectorAll('.intent').forEach(x=>x.setAttribute('aria-pressed','false'));
+  document.querySelectorAll('.chips').forEach(x=>x.classList.remove('on'));
+  if(on){b.setAttribute('aria-pressed','true');document.getElementById('chips-'+k).classList.add('on');
+    q.value=CH[k].prefix; q.focus(); stopType();}
+}));
+document.addEventListener('click',e=>{
+  const c=e.target.closest('.chip'); if(!c) return;
+  if(c.textContent==='בשפה הערבית'){ q.value=''; setLang('ar'); }
+  else { q.value=CH[c.dataset.k].prefix+c.textContent; }
+  render(); document.querySelector('main').scrollIntoView({behavior:'smooth'});
+});
+document.getElementById('searchForm').addEventListener('submit',e=>{e.preventDefault();render();document.querySelector('main').scrollIntoView({behavior:'smooth'});});
+q.addEventListener('input',()=>{stopType();render();});
+document.getElementById('clear').addEventListener('click',()=>{q.value='';render();q.focus();});
+document.getElementById('reset').addEventListener('click',()=>{q.value='';setLang('all');});
+function setLang(v){langFilter=v;document.querySelectorAll('.f').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f===v));render();}
+document.querySelectorAll('.f').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.f)));
+
+/* ---------- typing placeholder ---------- */
+const EX=["אני רוצה ללמוד על הכלי NotebookLM","אני רוצה ללמוד ליצור משחקים","אני רוצה ללמוד על הכלי Gemini","אני רוצה ללמוד ליצור סרטונים","אני רוצה ללמוד ליצור צ׳אטבוט","אני רוצה ללמוד על אתיקה"];
+let ti=0,tc=0,tdir=1,timer=null;
+function tick(){
+  const s=EX[ti]; tc+=tdir; q.placeholder=s.slice(0,tc)+(tdir>0?'|':'');
+  let d=tdir>0?55:25;
+  if(tc>=s.length){tdir=-1;d=1600;} else if(tc<=0){tdir=1;ti=(ti+1)%EX.length;d=350;}
+  timer=setTimeout(tick,d);
+}
+function stopType(){ if(timer){clearTimeout(timer);timer=null;q.placeholder="אני רוצה ללמוד על הכלי...";} }
+tick();
+
+/* ---------- workshop panel (sketch) ---------- */
+const panel=document.getElementById('panel'), scrim=document.getElementById('scrim');
+function openW(id){
+  const w=W.find(x=>x.id==id); if(!w) return;
+  const cats=["מושגי יסוד","שימוש בכלי, צעד אחר צעד","יישום בכיתה"];
+  panel.style.setProperty('--accent',w.accent);
+  panel.innerHTML=`<div class="p-head"><button class="p-close" aria-label="סגירה">×</button>
+     <h2>${esc(w.t)}</h2>${w.sub?`<p style="margin:-4px 0 10px;opacity:.85">${esc(w.sub)}</p>`:''}<div class="who"><span class="av">${esc(initials(w.p[0]))}</span>${esc(names(w.p))}</div></div>
+   <div class="p-body">${w.c?filled(w):sketch()}</div>`;
+  panel.classList.add('on'); scrim.classList.add('on'); panel.setAttribute('aria-hidden','false');
+  panel.querySelector('.p-close').onclick=closeW;
+  const ff=panel.querySelector('#faqFilter'); if(ff) ff.oninput=()=>{panel.querySelector('#faqList').innerHTML=faqHtml(w,ff.value);};
+  panel.scrollTop=0;
+  if(w.c&&w.c.gallery){let gi=0;const G=w.c.gallery;panel.querySelectorAll('.gal-btn').forEach(b=>b.onclick=()=>{gi=(gi+(+b.dataset.d)+G.length)%G.length;
+    const im=panel.querySelector('#galImg');im.src=G[gi];im.alt='שקף '+(gi+1);panel.querySelector('#galCount').textContent=(gi+1)+' / '+G.length;});}
+  const wasOpen=document.body.classList.contains('lock');
+  document.body.classList.add('lock');
+  try{if(!wasOpen&&location.hash!=='#w'+id) history.pushState({p:1},'','#w'+id); else history.replaceState(history.state,'','#w'+id);}catch(_){}
+}
+function sketch(){
+  const cats=["מושגי יסוד","שימוש בכלי, צעד אחר צעד","יישום בכיתה"];
+  return `<div class="sec"><h4>▶ הקלטת הסדנה</h4><div class="ph slides">ההקלטה תתווסף בקרוב</div></div>
+     <div class="sec"><h4>? שאלות נפוצות</h4>
+       ${cats.map(c=>`<div class="faq-cat"><b>${c}</b><div class="sk">שאלה לדוגמה</div><div class="sk">שאלה לדוגמה</div></div>`).join('')}
+       <p class="note">השאלות הנפוצות לסדנה זו יתווספו בקרוב.</p></div>`;
+}
+function fmt(a){return esc(a).replace(/ (\d+)\. /g,'<br>$1. ');}
+function faqHtml(w,f){
+  const cats=[...new Set(w.c.faq.map(x=>x.c))];
+  const term=norm(f||'');
+  return cats.map(c=>{
+    const items=w.c.faq.filter(x=>x.c===c&&(!term||norm(x.q+' '+x.a).includes(term)));
+    if(!items.length) return '';
+    return `<div class="faq-cat"><b>${esc(c)}</b>${items.map(x=>`<details class="qa"${term?' open':''}><summary>${esc(x.q)}</summary><div class="ans">${fmt(x.a)}</div></details>`).join('')}</div>`;
+  }).join('')||'<p class="note">לא נמצאה שאלה מתאימה.</p>';
+}
+function filled(w){
+  const c=w.c;
+  const links=`<div class="actions">
+        ${c.recording?`<a class="act" href="${c.recording}" target="_blank" rel="noopener">▶ צפייה בהקלטה</a>`:''}
+        ${c.slides?`<a class="act alt" href="${c.slides}" target="_blank" rel="noopener">▤ למצגת הסדנה</a>`:''}
+        ${c.site?`<a class="act alt" href="${c.site}" target="_blank" rel="noopener">⌂ ${esc(c.siteLabel||'לאתר המלווה')}</a>`:''}
+      </div>`;
+  if(c.pending) return `<div class="sec"><h4>חומרי הסדנה</h4>${links}<div class="pending">${c.note?esc(c.note)+' ':''}השאלות הנפוצות לסדנה זו יתווספו בקרוב.</div></div>`;
+  const gal=c.gallery?`<div class="sec"><h4>▤ שקפי הסדנה</h4><div class="gal"><img id="galImg" src="${c.gallery[0]}" alt="שקף 1"></div>
+      <div class="gal nav" style="background:none"><button class="gal-btn" data-d="-1" aria-label="שקף קודם">→</button><span class="gal-count" id="galCount" dir="ltr">1 / ${c.gallery.length}</span><button class="gal-btn" data-d="1" aria-label="שקף הבא">←</button></div></div>`:'';
+  return `<div class="sec"><h4>על הסדנה</h4><p class="summary">${esc(c.summary)}</p>${c.note?`<div class="pending">${esc(c.note)}</div>`:''}${c.summaryAr?`<p class="summary lang-ar" lang="ar" style="margin-top:10px">${esc(c.summaryAr)}</p>`:''}
+      ${links}</div>${gal}
+    <div class="sec"><h4>? שאלות נפוצות</h4>
+      <input class="faq-filter" id="faqFilter" type="search" placeholder="${c.lang==='ar'?'ابحث في أسئلة الورشة':'חיפוש בתוך השאלות של הסדנה'}">
+      <div id="faqList" ${c.lang==='ar'?'class="lang-ar" lang="ar"':''}>${faqHtml(w)}</div></div>`;
+}
+function hideW(){panel.classList.remove('on');scrim.classList.remove('on');panel.setAttribute('aria-hidden','true');document.body.classList.remove('lock');}
+function closeW(){if(!panel.classList.contains('on')) return; hideW(); try{if(history.state&&history.state.p) history.back(); else history.replaceState(null,'',location.pathname+location.search);}catch(_){}}
+window.addEventListener('popstate',()=>{if(!/^#w\d+$/.test(location.hash)) hideW();});
+scrim.onclick=closeW;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeW();});
+grid.addEventListener('click',e=>{const b=e.target.closest('.open')||e.target.closest('.card'); if(!b) return;
+  const id=(b.dataset.id)||b.querySelector('.open').dataset.id; openW(id);});
+
+/* ---------- learning paths ---------- */
+const PATHS=[
+ {t:"צעדים ראשונים עם Gemini הארגוני", for:"למי שרק מתחיל/ה ורוצה בסיס בטוח ושימושי", c:"#22296e", steps:[
+   [25,"מתחילים מהכללים: מה מותר, מה אסור ואיך בודקים תוצרים."],
+   [4,"מחברים את Gemini לג׳ימייל, ליומן ולדרייב והופכים אותו לעוזר הוראה."],
+   [8,"תוצר ראשון שחוסך זמן: בוחן ב-Forms שנבדק לבד."],
+   [23,"בונים Gem אישי למשימה שחוזרת כל שבוע."]]},
+ {t:"NotebookLM מקצה לקצה", for:"למי שרוצה להפוך חומר קיים למשאבים מגוונים", c:"#0b8a9c", steps:[
+   [7,"מהמטרה הפדגוגית לתוצר: בוחן, הסבר קולי או מצגת ממקור אחד."],
+   [19,"מצגות ייחודיות: מתווה, מקורות ושכבות עיצוב."],
+   [2,"שישה מקרי בוחן לתלמידים עם לקויות למידה."]]},
+ {t:"התאמות, הנגשה ולקויות למידה", for:"לחינוך המיוחד ולכל מורה שמתאים/ה חומרים", c:"#de7a2c", steps:[
+   [2,"ארגז כלים ללקויות למידה: פישוט, המחשה, שמיעה ופיגומים."],
+   [18,"קריינות והקראה: הופכים טקסט ומבחן לשמע."],
+   [10,"סיפורים חברתיים מותאמים ב-Storybook."],
+   [13,"הופכים דף מודפס לדף אינטראקטיבי עם התאמות."],
+   [17,"בונים כלי משלכם כשהמוכן לא מתאים."]]},
+ {t:"יוצרים משחקים, פעילויות ואפליקציות", for:"למי שרוצה לבנות בעצמו, בלי לדעת לתכנת", c:"#7a4bb0", steps:[
+   [17,"מתחילים כאן: תכנון, אנטומיה של פרומפט ובדיקות לפני שיתוף."],
+   [9,"פעילויות אינטראקטיביות ב-Gemini Canvas."],
+   [12,"משחקים לימודיים: חדר בריחה ומשחק תלת-ממדי."],
+   [16,"משחוק: הופכים משימה למשחק עם פרומפט אחד ותבניות מוכנות."],
+   [6,"אפליקציות לכיתה ופרסום ב-Google Sites."]]},
+ {t:"Google Classroom בעבודה היומיומית", for:"למי שעובד/ת עם Classroom ורוצה לחסוך זמן הכנה", c:"#167a55", steps:[
+   [15,"סיור בארגז הכלים: מערך שיעור, מצגת, תמונות ולוח בחירה."],
+   [24,"בוחן שבודק את עצמו וקריטריונים להערכה."],
+   [8,"טפסים, סקרים ומבחנים ושיוך שלהם לכיתה."]]},
+ {t:"מסלול בשפה הערבית", for:"סדנאות שהועברו בערבית, עם שאלות נפוצות בערבית", c:"#7a4bb0", steps:[
+   [3,"מ-Gemini Canvas למשימה מוכנה בתוך Drive."],
+   [22,"חומרי למידה מגוונים ב-Gemini Notebook."],
+   [9,"פעילויות אינטראקטיביות ב-Gemini."],
+   [12,"משחקים לימודיים בבינה מלאכותית."]]}
+];
+const byId=id=>W.find(w=>w.id===id);
+const NOREC_IDS=new Set([1,5,16,23]);
+document.getElementById('paths').innerHTML=PATHS.map(P=>`<article class="path" style="--pc:${P.c}">
+  <h3>${esc(P.t)}</h3><p class="for">${esc(P.for)} · ${P.steps.length} סדנאות</p>
+  <ol class="steps">${P.steps.map(([id,why])=>{const w=byId(id);return `<li><button type="button" data-id="${id}">${esc(w.t)}</button>${w.ar?'<span class="flag ar">בערבית</span>':''}${NOREC_IDS.has(id)?'<span class="flag norec">ללא הקלטה</span>':''}
+    <div class="by">${esc(names(w.p))}</div><div class="why">${esc(why)}</div></li>`}).join('')}</ol></article>`).join('');
+document.getElementById('paths').addEventListener('click',e=>{const b=e.target.closest('button[data-id]'); if(b) openW(b.dataset.id);});
+
+/* ---------- prompt bank ---------- */
+const PROMPTS=[
+ {w:3,cat:"דפי עבודה ומבחנים",tool:"Gemini Canvas",ar:1,t:"مسودة أولية لورقة عمل",x:"تصرّف كمعلم علوم للصف السادس. أنشئ في Gemini Canvas مسودة أولية لورقة عمل بالعربية عن «دورة الماء في الطبيعة» لمدة 25 دقيقة. اكتب عنوانًا وهدفين وتعليمات قصيرة وثلاثة أسئلة: ترتيب المراحل، تفسير ظاهرة، وتطبيق من الحياة. اترك مساحة للإجابات، واستخدم لغة مناسبة للطلاب. اعرضها كنص قابل للتحرير داخل Canvas. لا تضف مفتاح إجابة أو جدول تقييم الآن؛ سنطوّر المسودة لاحقًا باستخدام Gemini داخل Google Docs.",tip:"טיוטה ראשונה של דף עבודה. אחרי היצירה מייצאים ל-Google Docs."},
+ {w:3,cat:"דפי עבודה ומבחנים",tool:"Gemini ב-Docs",ar:1,t:"تطوير ورقة العمل داخل المستند",x:"طوّر ورقة العمل الحالية: حسّن الأسئلة وأضف جدول تقييم ومفتاح إجابة منفصلًا للمعلم. نسّقها بالعربية من اليمين لليسار واجعلها مناسبة للطباعة."},
+ {w:3,cat:"דפי עבודה ומבחנים",tool:"Gemini ב-Docs",ar:1,t:"توزيع العلامات",x:"هذه ورقة العمل عليها 20 علامة، قسّم العلامات ليكون مجموعها 20 واكتب العلامة عند كل سؤال. اجعل كل العلامات أرقامًا كاملة."},
+ {w:3,cat:"דפי עבודה ומבחנים",tool:"Gemini ב-Docs",ar:1,t:"سؤال بونص للمتفوقين",x:"أضف تمرينًا آخر في آخر الملف، اجعله أصعب قليلًا للطلاب المتفوقين، واكتب عليه علامة بونص."},
+ {w:3,cat:"דפי עבודה ומבחנים",tool:"Gemini ב-Docs",ar:1,t:"فحص وتجهيز للنشر",x:"افحص ورقة العمل من جديد، قسّم العلامات، لائم الأسئلة للموضوع، أضف أسئلة إذا وجدت نقصًا، واجعلها جاهزة للنشر."},
+ {w:4,cat:"דפי עבודה ומבחנים",tool:"Gemini",t:"דף עבודה בסגנון של קובץ קיים",x:"צור לי דף בסגנון של הקובץ הזה, בנושא אחר",tip:"עובד כש-Gemini מחובר לדרייב. אפשר להוסיף מבנה, למשל: ״חלק ראשון: הקנייה ודוגמאות, חלק שני: תרגול. שים לב שמדובר בעברית, יישור לימין.״"},
+ {w:2,cat:"התאמות ולקויות למידה",tool:"NotebookLM",t:"פישוט טקסט עמוס",x:"הסבר לי את עיקרי המאמר בשפה פשוטה, כאילו אני בן 12"},
+ {w:2,cat:"התאמות ולקויות למידה",tool:"NotebookLM",t:"מילון מונחים לפני קריאה",x:"סרוק את המאמר והוצא 10 מושגים קשים. כתוב מילון מונחים קצר שמסביר כל מושג במשפט אחד פשוט."},
+ {w:2,cat:"התאמות ולקויות למידה",tool:"NotebookLM",t:"סיכום חלקי, צעד אחר צעד",x:"סכם לי את עמודים 1-3 בלבד, ב-4 נקודות מרכזיות."},
+ {w:2,cat:"התאמות ולקויות למידה",tool:"NotebookLM",t:"השוואה בין מקורות",x:"מצא שתי נקודות דמיון ונקודת מחלוקת אחת בין המקורות שהעליתי."},
+ {w:2,cat:"התאמות ולקויות למידה",tool:"NotebookLM",t:"שלד לחיבור, בלי לכתוב במקום התלמיד",x:"בנה לי שלד (Outline) לחיבור בן 4 פסקאות. עבור כל פסקה כתוב רק משפט פתיחה."},
+ {w:2,cat:"התאמות ולקויות למידה",tool:"NotebookLM",t:"תרגול שליפה: ״עכשיו אתה המורה״",x:"מעכשיו אתה המורה. שאל אותי שאלות אמריקאיות, אחת בכל פעם. חכה לתשובה. אם טעיתי, תן לי רק רמז קטן.",tip:"נסו לענות בכוונה תשובה שגויה כדי לראות את הרמז."},
+ {w:2,cat:"התאמות ולקויות למידה",tool:"NotebookLM",t:"שאלות בלי בושה",x:"מה הכוונה במילה [המילה] בהקשר הזה? תן לי דוגמה מהחיים למושג שמוזכר בטקסט."},
+ {w:10,cat:"תמונות וסיפורים",tool:"Gemini Storybook",t:"סיפור חברתי",x:"צור סטוריבוק בעברית על ילדה בת שבע בשם נועה, על הפסקה רועשת בבית הספר. מה אפשר לעשות כשרועש: לבקש עזרה ממבוגר, למצוא פינה שקטה, לקרוא ולצייר לבד, לשחק משחק רגוע עם חברה, או לשים אוזניות. כתוב במשפטים קצרים וברורים, בטון רגוע ומתאר ולא בטון מצווה. כ-10 עמודים, בסגנון איור של אנימציה עדינה בצבעים רגועים."},
+ {w:11,cat:"תמונות וסיפורים",tool:"Gemini",t:"מדרש תמונה לפתיחת שיעור",x:"אני מורה לתלמידי כיתה א׳ ומלמדת על חג חנוכה. בפתיחת השיעור אני רוצה להציג במצגת תמונה שתעורר את סקרנות התלמידים, בסגנון מדרש תמונה, עם רמזים שקשורים לאור ולגבורה, כחידה שבה התלמידים יגלו את נושא השיעור. כתוב לי פרומפט בעברית שמתאר את התמונה שעליי ליצור.",tip:"קודם מדייקים את התיאור, ורק אחר כך מבקשים ליצור את התמונה."},
+ {w:11,cat:"תמונות וסיפורים",tool:"Gemini",t:"מתמונה לכרטיס משימה",x:"צור כרטיס משימה שמבוסס על האלמנטים בתמונה, עם תמונות האלמנטים, שבו כל תלמיד בוחר אלמנט אחד וכותב עליו פסקה."},
+ {w:11,cat:"תמונות וסיפורים",tool:"Gemini",t:"תכנון ספרון לראשית קריאה",x:"כתוב לי תיאור של כל תמונה ושל המלל בספרון של 4 עמודים על החורף לראשית קריאה.",tip:"אחר כך: ״צור את התמונה הראשונה לפי התיאור״, וממשיכים תמונה אחר תמונה."},
+ {w:11,cat:"תמונות וסיפורים",tool:"Gemini",t:"שינוי סגנון של תמונה",x:"ערוך את התמונה הזו כך שתתאים לספר ילדים מאויר וצבעוני לגיל 7."},
+ {w:19,cat:"מצגות",tool:"NotebookLM",t:"מתווה למצגת, עם שאלות הבהרה",x:"צור מתווה למצגת עבור תלמידי כיתה ה׳. המקור הוא מתוך יחידת הוראה [שם היחידה]. מטרת המצגת: ללוות את השיעור ולהציג רעיונות מרכזיים ושאלות לשיח. לפני שאתה יוצר את המתווה, שאל אותי שאלות כדי שיהיה לך את כל המידע.",tip:"כשהמתווה מוכן: ״צור לי מצגת בהתאם למתווה שמצורף במקור״."},
+ {w:15,cat:"מצגות",tool:"Gemini",t:"לוח בחירה להורדה",x:"סדר את 9 הפעילויות בטבלה של 3 על 3 עם אפשרות להורדה כ-PDF."},
+ {w:9,cat:"משחקים ואפליקציות",tool:"Gemini Canvas",ar:1,t:"اختبار تفاعلي",x:"أنشئ تطبيقًا تفاعليًا لاختبار اختيار من متعدد لطلاب الصف الخامس في العلوم حول أجهزة جسم الإنسان: 10 أسئلة بأربعة خيارات، تغذية راجعة فورية مع شرح، عدّاد نقاط، بالعربية ومن اليمين إلى اليسار."},
+ {w:9,cat:"משחקים ואפליקציות",tool:"Gemini Canvas",ar:1,t:"من مستند إلى إنفوجرافيك",x:"حوّل هذا المستند إلى إنفوجرافيك عربي من اليمين إلى اليسار. اجعل التصميم مناسبًا للهاتف."},
+ {w:12,cat:"משחקים ואפליקציות",tool:"ChatGPT ← Gemini Canvas",ar:1,t:"كتابة برومبت للعبة غرفة هروب",x:"اكتب لي برومبت احترافيًا للعبة تعليمية محوسبة من نوع غرفة هروب، للصف الرابع، في قواعد اللغة العربية. الهدف: أن يفهم الطالب أساسيات القواعد. تصميم مبدع بألوان ومؤثرات، تعليمات بسيطة في البداية، وخانة لاسم الطالب.",tip:"את הפרומפט שמתקבל מדביקים ב-Gemini Canvas."},
+ {w:16,cat:"משחקים ואפליקציות",tool:"Gemini Canvas",t:"משחק ״הקונדיטוריה המתמטית״",x:"צור לי משחק אינטראקטיבי שיהיה מעוצב כקונדיטוריה, בנושא שברים לכיתה ד׳.\nכותרת המשחק: ברוכים הבאים לקונדיטוריה הדיגיטלית של אקדמיית השברים!\nהוראות המשחק: שפים יקרים, עליכם לפתור את אתגרי המטבח כדי להפוך למאסטר-שפים. על כל תשובה נכונה תרוויחו 10 נקודות לכובע השף!\nהוסף בצד כובע שף שבתוכו תתבצע ספירת הנקודות.\nהוסף פידבק: תגובה לצדק: ״✅ כל הכבוד! אתם בדרך לכובע מישלן! (הרווחתם 10 נקודות ⭐)״. תגובה לטעות: ״❌ אופס, העוגה קצת נשרפה... נסו שוב!״\nסך הכול יהיו במשחק 10 שאלות.\nבסוף הוסף טבלה עם סיכום של השאלות שהתלמיד צדק בהן ושטעה בהן.\nהוסף למשחק שלוש רמות קושי, כך שיתאים באופן דיפרנציאלי לתלמידים ברמות שונות.",tip:"מחליפים נושא, כיתה ועלילה, ושומרים על המבנה: כותרת, הוראות, ניקוד, משוב, מספר שאלות, סיכום ורמות."},
+ {w:16,cat:"משחקים ואפליקציות",tool:"Gemini",t:"מעטפת סיפורית לתרגול",x:"אתה קונדיטור מצחיק. צור משחק של 5 שאלות בשברים. שאל שאלה אחת בכל פעם, אל תגלה את התשובה, ותן 10 נקודות על כל הצלחה.",tip:"אפשר להחליף את הדמות ואת הנושא, למשל מדענית או בלש."},
+ {w:16,cat:"משחקים ואפליקציות",tool:"Gemini",t:"חדר בריחה טקסטואלי",x:"אנחנו נעולים במעבדה סודית. כדי להשתחרר עלינו לפתור 4 חידות בנושא [הנושא]. תן חידה אחת בכל פעם, ואל תאפשר להתקדם בלי הקוד המדויק."},
+ {w:16,cat:"משחקים ואפליקציות",tool:"Gemini",t:"בחר את ההרפתקה שלך",x:"נהל משחק עלילתי של בחירות בנושא [הנושא]. בכל שלב תאר סיטואציה ותן שתי אפשרויות (א׳ או ב׳). הבחירה שלנו תשפיע על המשך הסיפור."},
+ {w:17,cat:"משחקים ואפליקציות",tool:"Gemini Canvas",t:"תיקון בלי לשבור",x:"הגדל את הכפתורים והוסף רמז לתשובה שגויה. שמור על התוכן ועל מבנה המשחק.",tip:"בכל תיקון מבקשים שינוי אחד ומציינים מה לשמור."},
+ {w:6,cat:"משחקים ואפליקציות",tool:"Gemini Canvas",t:"דרישות בסיס לאפליקציה כיתתית",x:"אפליקציית אינטרנט בעברית לשימוש מורה בכיתה. קובץ אחד בלבד, בלי התחברות ובלי שרת.",tip:"מוסיפים לפני כן מה האפליקציה עושה ולמי היא מיועדת."},
+ {w:23,cat:"עוזר אישי וארגון",tool:"Gemini Gems",t:"כלל עבודה לעוזר: לשאול לפני שעונים",x:"אם חסר מידע, שאל עד 3 שאלות ואז המתן.",tip:"מוסיפים להוראות של ה-Gem."},
+ {w:23,cat:"עוזר אישי וארגון",tool:"Gemini Gems",t:"בקשת בדיקה לעוזר החדש",x:"הכן דיון קצר על אמינות הודעה ברשת, כיתה ח׳, 15 דקות, לוח וטוש. ליד כל שלב ציין משך, וודא שסכום הזמנים תואם לזמן שהוגדר.",tip:"בודקים בתצוגה המקדימה: מבנה, מטרה והפניה למקור."},
+ {w:4,cat:"עוזר אישי וארגון",tool:"Gemini",t:"סיכום מייל",x:"מצא את המייל מאתמול מ[שם השולח] וסכם לי אותו.",tip:"עובד אחרי חיבור Gemini לאפליקציות של Google Workspace."},
+ {w:25,cat:"תקשורת ומשוב",tool:"כל כלי",t:"מכתב רגיש להורים",x:"כתוב מכתב קצר להורים של תלמידה בכיתה א׳ על ירידה בהישגים במתמטיקה, בטון מכיל ולא מאשים, הדגש חוזקות, השאר מקום לשם ולתאריך.",tip:"בלי שם התלמידה: משאירים מקום ומשלימים ידנית."},
+ {w:25,cat:"תקשורת ומשוב",tool:"כל כלי",t:"ביקורת אמיתית, בלי חנפנות",x:"קרא את מערך השיעור הבא, ציין שלוש חולשות מרכזיות, לכל אחת הסבר קצר והצעה מעשית, ואל תתחיל במחמאות."}
+];
+const PCATS=["הכול",...uniq(PROMPTS.map(x=>x.cat))];
+let pcat="הכול";
+const pq=document.getElementById('pq');
+document.getElementById('pcats').innerHTML=PCATS.map(c=>`<button class="f" data-c="${esc(c)}" aria-pressed="${c==='הכול'}">${esc(c)}</button>`).join('');
+function renderP(){
+  const term=norm(pq.value.trim());
+  const list=PROMPTS.map((x,i)=>({...x,i})).sort((a,b)=>(a.ar||0)-(b.ar||0)).filter(x=>(pcat==='הכול'||x.cat===pcat)&&(!term||norm([x.t,x.x,x.tip||'',x.tool,x.cat,byId(x.w).t,byId(x.w).p.join(' ')].join(' ')).includes(term)));
+  document.getElementById('pgrid').innerHTML=list.map(x=>{const w=byId(x.w);return `<article class="pr">
+    <h3 ${x.ar?'class="lang-ar" lang="ar" dir="rtl"':''}>${esc(x.t)}</h3>
+    <div class="meta"><span class="tag">${esc(x.tool)}</span><span class="tag make">${esc(x.cat)}</span>${x.ar?'<span class="tag ar">בערבית</span>':''}</div>
+    <pre ${x.ar?'lang="ar"':''}>${esc(x.x)}</pre>${x.tip?`<p class="tip">${esc(x.tip)}</p>`:''}
+    <div class="row"><button class="src" data-id="${w.id}">מתוך: ${esc(w.t)} · ${esc(names(w.p))}</button><button class="copy" data-i="${x.i}">העתקה</button></div></article>`}).join('');
+  document.getElementById('pempty').classList.toggle('on',!list.length);
+}
+document.getElementById('pcats').addEventListener('click',e=>{const b=e.target.closest('.f'); if(!b) return; pcat=b.dataset.c;
+  document.querySelectorAll('#pcats .f').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderP();});
+pq.addEventListener('input',renderP);
+document.getElementById('pgrid').addEventListener('click',async e=>{
+  const s=e.target.closest('.src'); if(s){openW(s.dataset.id);return;}
+  const c=e.target.closest('.copy'); if(!c) return;
+  const txt=PROMPTS[+c.dataset.i].x;
+  try{await navigator.clipboard.writeText(txt);}catch(_){const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(__){}t.remove();}
+  c.textContent='הועתק';c.classList.add('ok');setTimeout(()=>{c.textContent='העתקה';c.classList.remove('ok')},1600);
+});
+renderP();
+
+/* ---------- views ---------- */
+function setView(v){
+  document.querySelectorAll('.vt').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='view-'+v));
+}
+document.querySelector('.views').addEventListener('click',e=>{const b=e.target.closest('.vt'); if(b) setView(b.dataset.v);});
+document.getElementById('searchForm').addEventListener('submit',()=>setView('ws'));
+q.addEventListener('input',()=>setView('ws'));
+
+render();
+const m=location.hash.match(/^#w(\d+)$/); if(m) openW(m[1]);
+window.addEventListener('hashchange',()=>{const h=location.hash.match(/^#w(\d+)$/); if(h) openW(h[1]);});
+</script>
+</body>
+</html>
